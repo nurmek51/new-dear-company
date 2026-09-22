@@ -32,11 +32,12 @@ const REQUEST_HEADERS_TO_SKIP = new Set([
   'x-vercel-proxied-for',
 ]);
 
-function upstreamUrl(requestUrl = '/api/'): string {
-  const normalized = requestUrl.startsWith(API_PREFIX)
-    ? requestUrl
-    : `${API_PREFIX}/${requestUrl.replace(/^\/+/, '')}`;
-  return new URL(normalized, API_ORIGIN).toString();
+function upstreamUrl(requestUrl = '/api/proxy'): string {
+  const incoming = new URL(requestUrl, 'https://proxy.invalid');
+  const path = incoming.searchParams.get('path')?.replace(/^\/+/, '') ?? '';
+  incoming.searchParams.delete('path');
+  const query = incoming.searchParams.toString();
+  return `${API_ORIGIN}${API_PREFIX}/${path}${query ? `?${query}` : ''}`;
 }
 
 function upstreamHeaders(req: ProxyRequest): Headers {
