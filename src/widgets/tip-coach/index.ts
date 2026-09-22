@@ -1,0 +1,1 @@
+export { TipCoach } from './TipCoach';
