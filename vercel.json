@@ -1,11 +1,7 @@
 {
-  "buildCommand": "EXPO_PUBLIC_API_BASE_URL=/ npm run build:web",
+  "buildCommand": "EXPO_PUBLIC_API_BASE_URL=https://backend.dearcompany.ai npm run build:web",
   "outputDirectory": "dist",
   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://backend.dearcompany.ai/api/:path*"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
