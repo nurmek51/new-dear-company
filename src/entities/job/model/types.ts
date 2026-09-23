@@ -125,7 +125,7 @@ export function defaultJobSearchParams(): JobSearchParams {
   return {};
 }
 
-/** Cached unique values for every filterable field (spec §2.4). */
+/** Normalized string values from the filters-list transport response (spec §2.4). */
 export interface JobFiltersList {
   skills?: string[];
   specializations?: string[];

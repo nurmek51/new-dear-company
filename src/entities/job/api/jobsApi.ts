@@ -34,10 +34,45 @@ export async function getJob(id: string): Promise<Job | null> {
 
 /** GET /api/v1/jobs/filters-list/ (spec §2.4). */
 export async function getFiltersList(types?: string[]): Promise<JobFiltersList> {
-  return request<JobFiltersList>('/api/v1/jobs/filters-list/', {
+  const response = await request<Record<string, unknown>>('/api/v1/jobs/filters-list/', {
     anonymous: true,
     query: types ? { type: types } : undefined,
   });
+  return normalizeFiltersList(response);
+}
+
+/**
+ * The live API returns filter choices as `{ value, label }[]` and uses model
+ * field names for a few groups. Keep that transport detail at the API boundary
+ * so search params and the filter UI consistently work with string values.
+ */
+function normalizeFiltersList(response: Record<string, unknown>): JobFiltersList {
+  const values = (key: string): string[] => {
+    const options = response[key];
+    if (!Array.isArray(options)) return [];
+    return options.flatMap((option) => {
+      if (typeof option === 'string') return [option];
+      if (option && typeof option === 'object' && typeof (option as { value?: unknown }).value === 'string') {
+        return [(option as { value: string }).value];
+      }
+      return [];
+    });
+  };
+
+  return {
+    skills: values('skills'),
+    specializations: values('specializations'),
+    grades: values('grades'),
+    employment_types: values('employment_types').length ? values('employment_types') : values('work_types'),
+    work_formats: values('work_formats'),
+    english_levels: values('english_levels'),
+    languages: values('languages').length ? values('languages') : values('vacancy_languages'),
+    company_types: values('company_types'),
+    company_domains: values('company_domains'),
+    currencies: values('currencies').length ? values('currencies') : values('currency'),
+    countries: values('countries'),
+    sources: values('sources'),
+  };
 }
 
 /** POST /api/v1/jobs/ (spec §2.2, B2B). */

@@ -86,3 +86,39 @@ describe('saved jobs (apps/accounts/views_v2/b2c_job_operation.py)', () => {
     expect(page.results[0].id).toBe(7);
   });
 });
+
+describe('job filter options', () => {
+  it('normalizes the live filters-list shape to search parameter values', async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: async () => JSON.stringify({
+        work_types: [{ value: 'full_time', label: 'Full-Time' }],
+        work_formats: [{ value: 'remote', label: 'Remote' }],
+        vacancy_languages: [{ value: 'EN', label: 'English' }],
+        currency: [{ value: 'USD', label: 'USD' }],
+        grades: [{ value: 'senior', label: 'Senior' }],
+        specializations: [{ value: 'BACKEND', label: 'Backend' }, null],
+      }),
+    } as unknown as Response) as unknown as typeof fetch;
+
+    const filters = await jobsApi.getFiltersList();
+
+    expect(filters.employment_types).toEqual(['full_time']);
+    expect(filters.work_formats).toEqual(['remote']);
+    expect(filters.languages).toEqual(['EN']);
+    expect(filters.currencies).toEqual(['USD']);
+    expect(filters.grades).toEqual(['senior']);
+    expect(filters.specializations).toEqual(['BACKEND']);
+  });
+
+  it('still accepts the documented string-array shape', async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: async () => JSON.stringify({ work_formats: ['remote', 'hybrid'] }),
+    } as unknown as Response) as unknown as typeof fetch;
+
+    await expect(jobsApi.getFiltersList()).resolves.toMatchObject({ work_formats: ['remote', 'hybrid'] });
+  });
+});
