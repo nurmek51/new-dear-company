@@ -87,6 +87,21 @@ export function setUnauthorizedHandler(handler: UnauthorizedHandler | null): voi
 
 let refreshInFlight: Promise<boolean> | null = null;
 
+/**
+ * Cross-site cookies are neither reliable nor required for the Vercel web app:
+ * Chrome may block a credentialed request before it reaches the API. The app
+ * persists the JWT pair and sends Bearer/refresh tokens explicitly, so cookies
+ * are only enabled when frontend and API share an origin.
+ */
+function requestCredentials(): RequestCredentials {
+  if (Platform.OS !== 'web' || typeof window === 'undefined') return 'omit';
+  try {
+    return new URL(API_BASE_URL, window.location.origin).origin === window.location.origin ? 'include' : 'omit';
+  } catch {
+    return 'omit';
+  }
+}
+
 /** POST /api/v1/auth/token/refresh/ (spec §1.6) — single-flight. */
 async function refreshAccessToken(): Promise<boolean> {
   if (refreshInFlight) return refreshInFlight;
@@ -96,7 +111,7 @@ async function refreshAccessToken(): Promise<boolean> {
       const res = await fetch(`${API_BASE_URL}/api/v1/auth/token/refresh/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        credentials: Platform.OS === 'web' ? 'include' : 'omit',
+        credentials: requestCredentials(),
         body: JSON.stringify(tokens?.refresh ? { refresh: tokens.refresh } : {}),
       });
       if (!res.ok) {
@@ -169,7 +184,7 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
         method: opts.method ?? 'GET',
         headers,
         body,
-        credentials: Platform.OS === 'web' ? 'include' : 'omit',
+        credentials: requestCredentials(),
         signal: link.signal,
       });
     } catch (e) {

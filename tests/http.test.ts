@@ -56,6 +56,7 @@ describe('request()', () => {
     expect(init.method).toBe('GET');
     expect(init.headers.Accept).toBe('application/json');
     expect(init.headers.Authorization).toBeUndefined();
+    expect(init.credentials).toBe('omit');
   });
 
   it('sends the stored access token as a Bearer header', async () => {
