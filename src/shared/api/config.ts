@@ -35,6 +35,11 @@ export const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
 export const WEB_ORIGIN = process.env.EXPO_PUBLIC_WEB_ORIGIN?.trim().replace(/\/+$/, '') || undefined;
 
 /** Default per-request timeout; long AI/upload calls pass their own. */
-export const REQUEST_TIMEOUT_MS = Number(process.env.EXPO_PUBLIC_REQUEST_TIMEOUT_MS ?? 30000);
+function positiveNumber(value: string | undefined, fallback: number): number {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+export const REQUEST_TIMEOUT_MS = positiveNumber(process.env.EXPO_PUBLIC_REQUEST_TIMEOUT_MS, 30_000);
 
 export const TOKEN_STORAGE_KEY = '@dear-company/jwt';

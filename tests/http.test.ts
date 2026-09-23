@@ -9,6 +9,7 @@ import {
   toPage,
 } from '@/shared/api/http';
 import { clearTokens, saveTokens } from '@/shared/api/tokens';
+import { REQUEST_TIMEOUT_MS } from '@/shared/api/config';
 import { humanize } from '@/shared/api/enums';
 
 type FetchMock = ReturnType<typeof vi.fn>;
@@ -47,6 +48,10 @@ afterEach(() => {
 });
 
 describe('request()', () => {
+  it('uses a safe default when the build-time timeout is missing', () => {
+    expect(REQUEST_TIMEOUT_MS).toBe(30_000);
+  });
+
   it('builds the URL from the configured base + query and sends no auth header when signed out', async () => {
     fetchMock.mockResolvedValue(jsonResponse({ count: 0, next: null, previous: null, results: [] }));
     await request('/api/v1/jobs/search/', { query: { q: 'go', grade: ['senior', 'lead'] }, anonymous: true });
