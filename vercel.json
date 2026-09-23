@@ -1,17 +1,10 @@
 {
-  "buildCommand": "EXPO_PUBLIC_API_BASE_URL=/ npm run build:web",
+  "buildCommand": "EXPO_PUBLIC_API_BASE_URL=https://backend.dearcompany.ai npm run build:web",
   "outputDirectory": "dist",
-  "routes": [
+  "rewrites": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/proxy?path=$1"
-    },
-    {
-      "src": "/.*",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
