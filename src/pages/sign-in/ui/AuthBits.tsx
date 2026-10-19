@@ -1,6 +1,8 @@
 import { type ReactNode } from 'react';
-import { Pressable, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, View, type StyleProp, type ViewStyle, type TextInputProps } from 'react-native';
 import { accent, accentInk, useTheme } from '@/shared/theme';
+import { useBreakpoint } from '@/shared/lib/responsive';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { Field, Txt } from '@/shared/ui';
 
 /** The design's cat mark (sign-in: 26×22; onboarding: 52×44). */
@@ -103,6 +105,7 @@ export function AuthField(props: {
   onChangeText: (v: string) => void;
   placeholder: string;
   secure?: boolean;
+  inputMode?: TextInputProps['inputMode'];
   onSubmitEditing?: () => void;
   invalid?: boolean;
 }) {
@@ -113,6 +116,7 @@ export function AuthField(props: {
       onChangeText={props.onChangeText}
       placeholder={props.placeholder}
       secure={props.secure}
+      inputMode={props.inputMode}
       onSubmitEditing={props.onSubmitEditing}
       bg={t.card}
       size={13.5}
@@ -185,9 +189,10 @@ export function ErrorLine({ text }: { text: string | null }) {
 
 /** Centered 400px auth canvas (mobile: 100%, max 460). */
 export function AuthCanvas({ children, width = 400 }: { children: ReactNode; width?: number }) {
+  const { isMobile, gutter } = useBreakpoint();
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 40, paddingHorizontal: 24 }}>
+    <ScreenScrollView safeAreaTop contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingTop: isMobile ? 24 : 40, paddingBottom: 40, paddingHorizontal: gutter }}>
       <View style={{ width: '100%', maxWidth: width, gap: 16 }}>{children}</View>
-    </View>
+    </ScreenScrollView>
   );
 }

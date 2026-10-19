@@ -17,7 +17,10 @@ export function Checkbox({ checked, onPress, variant = 'dark', size = 18 }: Chec
   const mark = variant === 'accent' ? '#141519' : '#F6F4EE';
   return (
     <Pressable
-      onPress={onPress}
+      onPress={(event) => { event.stopPropagation(); onPress(); }}
+      hitSlop={12}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked }}
       style={{
         width: size,
         height: size,

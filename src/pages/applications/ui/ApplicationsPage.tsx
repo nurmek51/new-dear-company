@@ -171,8 +171,8 @@ export function ApplicationsPage() {
             borderRadius: 999,
             paddingLeft: 16,
             paddingRight: 8,
-            height: 42,
-            minWidth: 250,
+            height: isMobile ? 48 : 42,
+            minWidth: 0,
             ...(isMobile ? { width: '100%' } : null),
           }}
         >
@@ -187,7 +187,7 @@ export function ApplicationsPage() {
             placeholder={tr('search by job or company…')}
             placeholderTextColor={t.mut2}
             accessibilityLabel={tr('search by job or company…')}
-            style={{ flex: 1, minWidth: 120, fontSize: 13.5, fontFamily: font.regular, color: t.ink, outlineStyle: 'none' } as never}
+            style={{ flex: 1, minWidth: 0, fontSize: isMobile ? 16 : 13.5, fontFamily: font.regular, color: t.ink, outlineStyle: 'none' } as never}
           />
           {q ? <IconCircle icon="✕" size={26} fontSize={11} onPress={() => setQuery('')} /> : null}
         </View>

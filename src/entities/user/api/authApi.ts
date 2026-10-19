@@ -19,6 +19,7 @@ export async function login(identifier: string, password: string): Promise<ApiUs
 
 export interface RegisterInput {
   email: string;
+  phone_number?: string;
   password1: string;
   password2: string;
   name: string;

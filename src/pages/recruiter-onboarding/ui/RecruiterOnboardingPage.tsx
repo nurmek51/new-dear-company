@@ -1,12 +1,13 @@
 import { Redirect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, TextInput, View, type TextStyle, type ViewStyle } from 'react-native';
+import { Pressable, TextInput, View, type TextStyle, type ViewStyle } from 'react-native';
 import { authApi, useAuth } from '@/entities/user';
 import { ApiError } from '@/shared/api';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, font, link, useTheme } from '@/shared/theme';
 import { Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 
 /**
  * Recruiter registration (Recruiter ATS prototype 192–224 "let's set up your
@@ -159,9 +160,9 @@ export function RecruiterOnboardingPage() {
   if (status === 'signedIn' && user?.user_type === 'b2b') return <Redirect href={'/recruiter' as never} />;
 
   const canvas = (w: number, children: ReactNode) => (
-    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: bp.isMobile ? 16 : 24, paddingVertical: 30 }}>
+    <ScreenScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: bp.isMobile ? 16 : 24, paddingVertical: 30 }}>
       <View style={{ width: '100%', maxWidth: w, gap: 16 }}>{children}</View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 
   // Signed in as a job seeker: a b2b account is a separate registration (spec §0.1 user_type).

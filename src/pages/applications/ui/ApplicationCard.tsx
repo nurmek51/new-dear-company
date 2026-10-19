@@ -129,7 +129,7 @@ export function ApplicationCard({ row, onAction, busy }: ApplicationCardProps) {
       }}
     >
       <LogoBadge letter={letter} bg={t[tone[0]]} color={t[tone[1]]} size={46} radius={14} fontSize={17} />
-      <View style={{ flex: 1, minWidth: 240, gap: 4 }}>
+      <View style={{ flex: 1, minWidth: isMobile ? 0 : 240, gap: 4 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <Txt size={18} weight="700" ls={-0.02}>
             {row.job.title}
@@ -155,7 +155,7 @@ export function ApplicationCard({ row, onAction, busy }: ApplicationCardProps) {
           </Txt>
         )}
       </View>
-      <View style={{ alignItems: 'center', gap: 5, ...(isMobile ? { width: '100%', flexDirection: 'row', justifyContent: 'space-between' } : null) }}>
+      <View style={{ alignItems: 'center', flexWrap: 'wrap', gap: 10, ...(isMobile ? { width: '100%', flexDirection: 'row', justifyContent: 'space-between' } : null) }}>
         <Pressable onPress={toggleHistory} accessibilityRole="button" accessibilityLabel={tr('history')}>
           {(s) => (
             <Txt size={12} weight="600" color={(s as { hovered?: boolean }).hovered ? t.ink : t.mut}>
@@ -164,7 +164,7 @@ export function ApplicationCard({ row, onAction, busy }: ApplicationCardProps) {
           )}
         </Pressable>
         {transitions.length > 0 ? (
-          <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
             {busy ? <ActivityIndicator color={t.ink} /> : null}
             {transitions.map((tx) => {
               const dark = tx === 'offer-accepted';

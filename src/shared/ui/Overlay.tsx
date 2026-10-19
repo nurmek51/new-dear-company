@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
-import { Modal, Pressable, ScrollView, View, type StyleProp, type ViewStyle } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, View, type StyleProp, type ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useTheme } from '@/shared/theme';
 
@@ -15,51 +16,34 @@ export interface OverlayProps {
   children?: ReactNode;
 }
 
-/** Dimmed backdrop + centered card, the design's modal pattern. */
-export function Overlay({
-  visible,
-  onClose,
-  width = 420,
-  padding = 24,
-  radius = 22,
-  align = 'center',
-  style,
-  children,
-}: OverlayProps) {
+/** Dimmed backdrop + scrollable, keyboard-aware card. */
+export function Overlay({ visible, onClose, width = 420, padding = 24, radius = 22, align = 'center', style, children }: OverlayProps) {
   const t = useTheme();
   const bp = useBreakpoint();
+  const insets = useSafeAreaInsets();
   if (!visible) return null;
   return (
     <Modal transparent visible={visible} animationType="fade" onRequestClose={onClose}>
-      <Pressable
-        onPress={onClose}
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(20,21,25,0.45)',
-          justifyContent: align === 'center' ? 'center' : 'flex-start',
-          alignItems: 'center',
-          padding: bp.isMobile ? 16 : 24,
-          ...(align === 'top' ? { paddingTop: 90 } : null),
-        }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1, backgroundColor: 'rgba(20,21,25,0.45)' }}
       >
-        <Pressable
-          onPress={(e) => e.stopPropagation()}
-          style={[
-            {
-              width: '100%',
-              maxWidth: width,
-              maxHeight: '92%',
-              backgroundColor: t.card,
-              borderRadius: radius,
-            },
-            style,
-          ]}
+        <Pressable onPress={onClose} accessibilityLabel="Close dialog" accessibilityRole="button" style={{ position: 'absolute', inset: 0 }} />
+        <View
+          pointerEvents="box-none"
+          style={{ flex: 1, alignItems: 'center', justifyContent: align === 'center' ? 'center' : 'flex-start', paddingHorizontal: bp.isMobile ? 12 : 24, paddingTop: Math.max(insets.top + 12, align === 'top' && !bp.isMobile ? 90 : 24), paddingBottom: insets.bottom + 24 }}
         >
-          <ScrollView contentContainerStyle={{ padding }} showsVerticalScrollIndicator={false}>
-            {children}
-          </ScrollView>
-        </Pressable>
-      </Pressable>
+          <View
+            accessibilityViewIsModal
+            role="dialog"
+            style={[{ width: '100%', maxWidth: width, maxHeight: '100%', backgroundColor: t.card, borderRadius: radius, overflow: 'hidden', flexShrink: 1 }, style]}
+          >
+            <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" contentContainerStyle={{ padding: bp.isMobile ? Math.min(padding, 20) : padding }}>
+              {children}
+            </ScrollView>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

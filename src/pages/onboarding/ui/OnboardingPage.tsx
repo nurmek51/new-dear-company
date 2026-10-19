@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect } from 'react';
-import { Pressable, ScrollView, View, type ViewStyle } from 'react-native';
+import { Pressable, View, type ViewStyle } from 'react-native';
 import { useAuth } from '@/entities/user';
 import { obFormatDefs, obGradeDefs, obRoleDefs, useOnboardingFlags, useOnboardingStore, useSeekerPrefs } from '@/features/onboarding';
 import { WORK_FORMATS, type Grade, type WorkFormat } from '@/shared/api';
@@ -9,6 +9,7 @@ import { useLangStore, useT } from '@/shared/lib/useT';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { accent, accentInk, link, useTheme } from '@/shared/theme';
 import { Card, Checkbox, Field, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { CatMark, Highlight } from '@/pages/sign-in';
 
 /** Onboarding pill: 9px 18px, radius 999, 14px; lime when on. */
@@ -96,7 +97,7 @@ export function OnboardingPage() {
   const ctaOn = obConsent;
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 40, paddingHorizontal: 24 }}>
+    <ScreenScrollView safeAreaTop contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 40, paddingHorizontal: 24 }}>
       <View style={{ width: '100%', maxWidth: isMobile ? 460 : 560, gap: 16 }}>
         {obStep === 0 && (
           <View style={{ alignItems: 'center', gap: 18 }}>
@@ -284,6 +285,6 @@ export function OnboardingPage() {
           </View>
         )}
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

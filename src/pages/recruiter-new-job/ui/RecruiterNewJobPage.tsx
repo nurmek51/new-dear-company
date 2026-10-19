@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { jobsApi, type Job } from '@/entities/job';
 import { Toast, useToast } from '@/pages/recruiter-job';
 import { EMPLOYMENT_TYPES, ENGLISH_LEVELS, GRADES, WORK_FORMATS, ApiError, humanize } from '@/shared/api';
@@ -8,6 +8,7 @@ import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, danger, link, useTheme } from '@/shared/theme';
 import { Overlay, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { emptyJobForm, fromJob, toWriteInput, validateJobForm, type JobForm, type JobFormErrors } from '../model/jobForm';
 import { AiAssistCard } from './AiAssistCard';
 import { FieldBlock, FormCard, Input, PickChip, StepHeader } from './formUi';
@@ -114,7 +115,7 @@ export function RecruiterNewJobPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+      <ScreenScrollView contentContainerStyle={{ paddingBottom: 40 }}>
         <View style={{ width: '100%', maxWidth: 880, alignSelf: 'center', paddingTop: 28, paddingHorizontal: gutter }}>
           <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 12 }}>
             <Pressable onPress={() => router.push('/recruiter/jobs' as never)} accessibilityRole="link">
@@ -308,7 +309,7 @@ export function RecruiterNewJobPage() {
             </>
           )}
         </View>
-      </ScrollView>
+      </ScreenScrollView>
 
       <Overlay visible={confirmDelete} onClose={deleting ? () => undefined : () => setConfirmDelete(false)} width={420} radius={18} padding={0}>
         <View style={{ paddingVertical: 24, paddingHorizontal: 26, gap: 14 }}>

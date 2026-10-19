@@ -1,4 +1,5 @@
 import { Pressable, type StyleProp, type ViewStyle } from 'react-native';
+import { useBreakpoint } from '@/shared/lib/responsive';
 import { useTheme } from '@/shared/theme';
 import { Txt, type Weight } from './Txt';
 
@@ -18,11 +19,16 @@ export interface ChipProps {
 /** Rounded pill chip — the design's most common interactive element. */
 export function Chip({ label, bg, color, weight = '500', size = 13, px = 14, py = 7, onPress, style }: ChipProps) {
   const t = useTheme();
+  const { isMobile } = useBreakpoint();
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole={onPress ? 'button' : undefined}
       style={(state) => [
         {
+          maxWidth: '100%',
+          minHeight: onPress && isMobile ? 44 : undefined,
+          justifyContent: 'center',
           paddingHorizontal: px,
           paddingVertical: py,
           borderRadius: 999,
@@ -32,7 +38,7 @@ export function Chip({ label, bg, color, weight = '500', size = 13, px = 14, py 
         style,
       ]}
     >
-      <Txt size={size} weight={weight} color={color ?? t.ink2} style={{ whiteSpace: 'nowrap' } as never}>
+      <Txt size={size} weight={weight} color={color ?? t.ink2} style={{ flexShrink: 1 }}>
         {label}
       </Txt>
     </Pressable>

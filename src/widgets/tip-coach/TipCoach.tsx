@@ -1,5 +1,7 @@
 import { Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { tipDefs, useTipsStore } from '@/features/tips';
+import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent } from '@/shared/theme';
 import { Txt } from '@/shared/ui';
@@ -7,6 +9,8 @@ import { Txt } from '@/shared/ui';
 /** Fixed bottom-left coach-mark ("tip 1/7") shown once per screen. */
 export function TipCoach({ screen }: { screen: string }) {
   const tr = useT();
+  const { isMobile } = useBreakpoint();
+  const insets = useSafeAreaInsets();
   const tipsSeen = useTipsStore((s) => s.tipsSeen);
   const markTipSeen = useTipsStore((s) => s.markTipSeen);
   const tip = tipDefs[screen];
@@ -15,10 +19,7 @@ export function TipCoach({ screen }: { screen: string }) {
   return (
     <View
       style={{
-        position: 'absolute',
-        left: 20,
-        bottom: 20,
-        width: 300,
+        ...(isMobile ? { margin: 10, marginBottom: 10 + insets.bottom } : { position: 'absolute' as const, left: 20, bottom: 20, width: 300 }),
         backgroundColor: '#141519',
         borderRadius: 16,
         paddingVertical: 16,
@@ -38,11 +39,14 @@ export function TipCoach({ screen }: { screen: string }) {
             {tr('tip')} {tip.n}/5
           </Txt>
         </View>
-        <Txt size={13.5} weight="700" color="#F6F4EE">
+        <Txt size={13.5} weight="700" color="#F6F4EE" style={{ flex: 1 }}>
           {tr(tip.title)}
         </Txt>
         <Pressable
           onPress={dismiss}
+          accessibilityRole="button"
+          accessibilityLabel={tr('close tip')}
+          hitSlop={10}
           style={{ marginLeft: 'auto', width: 24, height: 24, borderRadius: 7, alignItems: 'center', justifyContent: 'center' }}
         >
           <Txt size={12} color="#a1a1aa">
@@ -53,7 +57,7 @@ export function TipCoach({ screen }: { screen: string }) {
       <Txt size={12.5} color="#d4d4d8" lh={1.55}>
         {tr(tip.text)}
       </Txt>
-      <Pressable onPress={dismiss} style={{ alignSelf: 'flex-start', paddingVertical: 2 }}>
+      <Pressable onPress={dismiss} accessibilityRole="button" hitSlop={10} style={{ alignSelf: 'flex-start', paddingVertical: 2 }}>
         <Txt size={12} weight="700" color={accent}>
           {tr('got it ✓')}
         </Txt>

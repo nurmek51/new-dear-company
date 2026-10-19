@@ -115,8 +115,8 @@ export function JobsPage() {
           <Txt size={bp.isMobile ? 29 : 46} weight="700" lh={1.08} ls={-0.04}>
             {tr('dear company,')}
           </Txt>
-          <Pressable onPress={() => setHeroIdx((i) => (i + 1) % heroLines.length)} accessibilityRole="button" accessibilityLabel={tr('next line')}>
-            <View style={{ backgroundColor: accent, borderRadius: 10, paddingVertical: 2, paddingHorizontal: 16, transform: [{ rotate: '-1.2deg' }] }}>
+          <Pressable onPress={() => setHeroIdx((i) => (i + 1) % heroLines.length)} accessibilityRole="button" accessibilityLabel={tr('next line')} style={{ maxWidth: '100%' }}>
+            <View style={{ backgroundColor: accent, borderRadius: 10, paddingVertical: 2, paddingHorizontal: 16, maxWidth: '100%', transform: [{ rotate: '-1.2deg' }] }}>
               <Txt size={bp.isMobile ? 24 : 34} weight="700" ls={-0.03} color={accentInk}>
                 {tr(heroLines[heroIdx])}
               </Txt>
@@ -167,14 +167,14 @@ export function JobsPage() {
       {/* filters + feed (design 660–841) */}
       <View
         style={{
-          flexDirection: bp.isMobile ? 'column' : 'row',
+          flexDirection: bp.isCompact ? 'column' : 'row',
           gap: 24,
           paddingTop: 18,
           paddingHorizontal: bp.gutter,
           alignItems: 'flex-start',
         }}
       >
-        {bp.isMobile ? (
+        {bp.isCompact ? (
           <View style={{ width: '100%', gap: 10 }}>
             <Chip
               label={filtersOpen ? tr('hide filters') : `${tr('filters')}${filterCount ? ` · ${filterCount}` : ''}`}
@@ -187,10 +187,10 @@ export function JobsPage() {
             {filtersOpen && sidebar}
           </View>
         ) : (
-          <View style={{ width: 280, gap: 10 }}>{sidebar}</View>
+          <View style={{ width: 280, flexShrink: 0, gap: 10 }}>{sidebar}</View>
         )}
 
-        <View style={{ flex: 1, width: '100%', minWidth: 0 }}>
+        <View style={{ flex: bp.isCompact ? undefined : 1, width: '100%', minWidth: 0 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap', paddingTop: 2, paddingHorizontal: 4, paddingBottom: 12 }}>
             <Txt size={14} weight="600" color={t.ink2} style={{ marginRight: 2 }}>
               {signedIn ? tr('picked for you') : tr('newest first')}

@@ -40,16 +40,21 @@ export function Btn({
     color ?? (variant === 'accent' ? accentInk : variant === 'muted' ? t.mut : '#F6F4EE');
   return (
     <Pressable
-      onPress={disabled ? undefined : onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      onPress={onPress}
       style={(state) => [
         {
+          minHeight: 44,
+          maxWidth: '100%',
           paddingHorizontal: px,
           paddingVertical: py,
           borderRadius: radius,
           backgroundColor: bgColor,
           alignItems: 'center',
           justifyContent: 'center',
-          opacity: (state as { hovered?: boolean }).hovered && !disabled ? 0.9 : 1,
+          opacity: disabled ? 0.5 : state.pressed ? 0.75 : (state as { hovered?: boolean }).hovered ? 0.9 : 1,
           ...(disabled ? { cursor: 'default' } : null),
         } as ViewStyle,
         style,

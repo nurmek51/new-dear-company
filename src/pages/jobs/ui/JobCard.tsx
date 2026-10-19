@@ -33,11 +33,11 @@ export function JobCard({ job, saved, savePending, onOpen, onApply, onSave }: Pr
       accessibilityLabel={`${job.designation}, ${job.company}`}
       style={(s) =>
         ({
-          flexDirection: bp.isMobile ? 'column' : 'row',
-          alignItems: bp.isMobile ? 'stretch' : 'center',
-          gap: bp.isMobile ? 14 : 20,
+          flexDirection: bp.isCompact ? 'column' : 'row',
+          alignItems: bp.isCompact ? 'stretch' : 'center',
+          gap: bp.isCompact ? 14 : 20,
           paddingVertical: 20,
-          paddingHorizontal: bp.isMobile ? 18 : 26,
+          paddingHorizontal: bp.isCompact ? 18 : 26,
           backgroundColor: t.card,
           borderRadius: 20,
           marginBottom: 10,
@@ -49,7 +49,7 @@ export function JobCard({ job, saved, savePending, onOpen, onApply, onSave }: Pr
         }) as ViewStyle
       }
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, flex: 1, minWidth: 0 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, flex: bp.isCompact ? undefined : 1, minWidth: 0 }}>
         {job.compImage ? (
           <Image source={{ uri: job.compImage }} style={{ width: 46, height: 46, borderRadius: 13, backgroundColor: t.chip }} accessibilityIgnoresInvertColors />
         ) : (
@@ -57,7 +57,7 @@ export function JobCard({ job, saved, savePending, onOpen, onApply, onSave }: Pr
         )}
         <View style={{ gap: 5, flex: 1, minWidth: 0 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <Txt size={18} weight="700" ls={-0.02}>
+            <Txt size={18} weight="700" ls={-0.02} style={{ flexShrink: 1 }}>
               {job.designation}
             </Txt>
             {badge && (
@@ -86,16 +86,20 @@ export function JobCard({ job, saved, savePending, onOpen, onApply, onSave }: Pr
         </View>
       </View>
 
-      <Txt size={17} weight="700" style={{ fontVariant: ['tabular-nums'], ...(bp.isMobile ? null : { flexShrink: 0 }) }}>
+      <Txt size={17} weight="700" style={{ fontVariant: ['tabular-nums'], ...(bp.isCompact ? null : { flexShrink: 0 }) }}>
         {job.salary || tr('negotiable')}
       </Txt>
 
-      <View style={{ gap: 5, alignItems: bp.isMobile ? 'flex-start' : 'center' }}>
+      <View style={{ gap: 5, alignItems: bp.isCompact ? 'stretch' : 'center' }}>
         <View style={{ flexDirection: 'row', gap: 8 }}>
           <Pressable
-            onPress={onApply}
+            onPress={(event) => { event.stopPropagation(); onApply(); }}
             accessibilityRole="button"
             style={(s) => ({
+              flex: bp.isCompact ? 1 : undefined,
+              minHeight: 44,
+              alignItems: 'center',
+              justifyContent: 'center',
               paddingVertical: 10,
               paddingHorizontal: 22,
               borderRadius: 12,
@@ -107,14 +111,14 @@ export function JobCard({ job, saved, savePending, onOpen, onApply, onSave }: Pr
             </Txt>
           </Pressable>
           <Pressable
-            onPress={onSave}
+            onPress={(event) => { event.stopPropagation(); onSave(); }}
             disabled={savePending}
             accessibilityRole="button"
             accessibilityLabel={saved ? tr('remove from saved') : tr('save job')}
             accessibilityState={{ selected: saved }}
             style={(s) => ({
-              width: 40,
-              height: 40,
+              width: 44,
+              height: 44,
               borderRadius: 12,
               backgroundColor: saved || (s as { hovered?: boolean }).hovered ? accent : t.chip,
               alignItems: 'center',

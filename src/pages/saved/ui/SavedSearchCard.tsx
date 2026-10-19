@@ -43,7 +43,7 @@ export function SavedSearchCard({ query, deleting, onRun, onDelete }: Props) {
       {chips.length > 0 ? (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
           {chips.map((c, i) => (
-            <View key={`${c}-${i}`} style={{ paddingVertical: 5, paddingHorizontal: 12, borderRadius: 999, backgroundColor: t.chip }}>
+            <View key={`${c}-${i}`} style={{ maxWidth: '100%', paddingVertical: 5, paddingHorizontal: 12, borderRadius: 999, backgroundColor: t.chip }}>
               <Txt size={12} weight="500" color={t.ink2}>{c}</Txt>
             </View>
           ))}
@@ -51,7 +51,7 @@ export function SavedSearchCard({ query, deleting, onRun, onDelete }: Props) {
       ) : (
         <Txt size={12.5} weight="500" color={t.mut}>{tr('no filters — running it shows the whole feed.')}</Txt>
       )}
-      <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', borderTopWidth: 1, borderTopColor: t.bg, paddingTop: 11 }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, alignItems: 'center', borderTopWidth: 1, borderTopColor: t.bg, paddingTop: 11 }}>
         <Pressable
           onPress={onRun}
           accessibilityRole="button"

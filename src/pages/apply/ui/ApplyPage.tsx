@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { applicationsApi, type CoverLetterDocument, type JobApplicationStatus, type ResumeDocument } from '@/entities/application';
 import { jobsApi, type Job } from '@/entities/job';
 import { ApiError, errorMessageFrom } from '@/shared/api';
@@ -8,6 +8,7 @@ import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, accentInk, danger, link, useTheme } from '@/shared/theme';
 import { Btn, Card, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { AppliedMark } from './AppliedMark';
 
 type Loaded = {
@@ -146,7 +147,7 @@ export function ApplyPage() {
   );
 
   return (
-    <ScrollView contentContainerStyle={{ paddingVertical: 26, paddingBottom: 44, paddingHorizontal: gutter }}>
+    <ScreenScrollView contentContainerStyle={{ paddingVertical: 26, paddingBottom: 44, paddingHorizontal: gutter }}>
       <View style={{ maxWidth: 720, width: '100%', alignSelf: 'center', gap: 16 }}>
         {/* header */}
         <View style={{ gap: 6 }}>
@@ -478,6 +479,6 @@ export function ApplyPage() {
           </View>
         )}
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

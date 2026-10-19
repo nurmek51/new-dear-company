@@ -10,6 +10,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAuth } from '@/entities/user';
 import { isApiConfigured } from '@/shared/api';
 import { useTheme } from '@/shared/theme';
@@ -44,9 +45,11 @@ export default function RootLayout() {
   if (status === 'error') return <AppConnectionErrorScreen message={initError} onRetry={onRetry} retrying={retrying} />;
 
   return (
-    <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg } }} />
-    </View>
+    <SafeAreaProvider>
+      <View style={{ flex: 1, backgroundColor: t.bg }}>
+        <StatusBar style="auto" />
+        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg } }} />
+      </View>
+    </SafeAreaProvider>
   );
 }

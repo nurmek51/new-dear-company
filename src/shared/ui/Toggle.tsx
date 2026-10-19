@@ -12,6 +12,9 @@ export function Toggle({ on, onPress }: ToggleProps) {
   return (
     <Pressable
       onPress={onPress}
+      hitSlop={12}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: on }}
       style={{
         width: 38,
         height: 22,

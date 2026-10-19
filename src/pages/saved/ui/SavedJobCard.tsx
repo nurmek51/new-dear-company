@@ -55,7 +55,7 @@ export function SavedJobCard({ job, savedAt, removing, onApply, onRemove }: Prop
         opacity: removing ? 0.5 : 1,
       }}
     >
-      <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center', flex: 1, minWidth: 0 }}>
+      <View style={{ flexDirection: 'row', gap: 16, alignItems: 'center', flex: bp.isMobile ? undefined : 1, minWidth: 0 }}>
         <View style={{ width: 46, height: 46, borderRadius: 14, backgroundColor: tint.bg, alignItems: 'center', justifyContent: 'center', opacity: closed ? 0.7 : 1 }}>
           <Txt size={17} weight="700" color={tint.color}>{(company || job.title).slice(0, 1).toUpperCase()}</Txt>
         </View>
@@ -72,7 +72,7 @@ export function SavedJobCard({ job, savedAt, removing, onApply, onRemove }: Prop
           )}
         </View>
       </View>
-      <View style={{ gap: 5, alignItems: 'center', flexDirection: bp.isMobile ? 'row' : 'column', justifyContent: bp.isMobile ? 'space-between' : 'center' }}>
+      <View style={{ gap: 12, flexWrap: 'wrap', alignItems: 'center', flexDirection: bp.isMobile ? 'row' : 'column', justifyContent: bp.isMobile ? 'space-between' : 'center' }}>
         {!closed && (
           <Pressable
             onPress={onApply}

@@ -1,6 +1,5 @@
 import { Redirect, Slot, usePathname } from 'expo-router';
 import { View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAuth } from '@/entities/user';
 import { useTheme } from '@/shared/theme';
 import { NavBar } from '@/widgets/nav-bar';
@@ -17,14 +16,12 @@ export default function SeekerLayout() {
     return <Redirect href={'/sign-in' as never} />;
   }
   return (
-    <SafeAreaProvider>
-      <View style={{ flex: 1, backgroundColor: t.bg }}>
-        <NavBar />
-        <View style={{ flex: 1 }}>
-          <Slot />
-        </View>
-        <TipCoach screen={screen} />
+    <View style={{ flex: 1, backgroundColor: t.bg }}>
+      <NavBar />
+      <View style={{ flex: 1 }}>
+        <Slot />
       </View>
-    </SafeAreaProvider>
+      <TipCoach screen={screen} />
+    </View>
   );
 }

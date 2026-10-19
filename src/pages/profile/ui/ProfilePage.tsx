@@ -1,7 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Image, Platform, Pressable, ScrollView, View, type ViewStyle } from 'react-native';
+import { Image, Platform, Pressable, View, type ViewStyle } from 'react-native';
 import { authApi, useAuth } from '@/entities/user';
 import { useTipsStore } from '@/features/tips';
 import { ApiError } from '@/shared/api';
@@ -9,6 +9,7 @@ import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, accentInk, useTheme } from '@/shared/theme';
 import { Card, Field, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 
 /** The backend serializer rejects anything over 5MB (the upload view says 10MB). */
 const MAX_PICTURE_BYTES = 5 * 1024 * 1024;
@@ -229,7 +230,7 @@ export function ProfilePage() {
   const h1 = isMobile ? 29 : 46;
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 44 }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: 44 }}>
       {/* header */}
       <View style={{ paddingTop: 38, paddingHorizontal: gutter, paddingBottom: 8, gap: 12 }}>
         <View>
@@ -349,6 +350,6 @@ export function ProfilePage() {
           </Card>
         </View>
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

@@ -233,7 +233,7 @@ export function CandidateDetail({
       <View style={{ gap: 14, paddingTop: 24, paddingHorizontal: px }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 16, rowGap: 12, flexWrap: 'wrap' }}>
           <Avatar name={applicant.name} uri={applicant.profile_picture} size={52} radius={16} fontSize={18} />
-          <View style={{ flex: 1, minWidth: 200, gap: 9, paddingTop: 2 }}>
+          <View style={{ flex: 1, minWidth: bp.isMobile ? 0 : 200, gap: 9, paddingTop: 2 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <Txt size={21} weight="700" ls={-0.02}>{applicant.name || tr('candidate')}</Txt>
               <StatusPill status={applicant.status} />

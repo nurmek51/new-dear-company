@@ -1,4 +1,5 @@
 import { Pressable, TextInput, View, type ViewStyle } from 'react-native';
+import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { font, link, useTheme } from '@/shared/theme';
 import { Txt } from '@/shared/ui';
@@ -13,6 +14,7 @@ interface Props {
 /** Design 651–658: card-shaped bar with magnifier, input, clear ✕, dark "search" button. */
 export function SearchBar({ value, onChangeText, onSubmit, onClear }: Props) {
   const t = useTheme();
+  const { isMobile } = useBreakpoint();
   const tr = useT();
   return (
     <View
@@ -20,13 +22,13 @@ export function SearchBar({ value, onChangeText, onSubmit, onClear }: Props) {
         {
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 12,
+          gap: isMobile ? 8 : 12,
           backgroundColor: t.card,
           borderRadius: 18,
           paddingTop: 8,
           paddingBottom: 8,
           paddingRight: 8,
-          paddingLeft: 20,
+          paddingLeft: isMobile ? 12 : 20,
           maxWidth: 720,
           width: '100%',
           shadowColor: '#141519',
@@ -45,13 +47,13 @@ export function SearchBar({ value, onChangeText, onSubmit, onClear }: Props) {
         placeholder={tr('try “design, remote, kind team, pays rent”')}
         placeholderTextColor={t.mut2}
         accessibilityLabel={tr('search jobs')}
-        style={{ flex: 1, minWidth: 0, fontSize: 15, color: t.ink, fontFamily: font.regular, paddingVertical: 8, outlineStyle: 'none' } as never}
+        style={{ flex: 1, minWidth: 0, fontSize: isMobile ? 16 : 15, color: t.ink, fontFamily: font.regular, paddingVertical: 8, outlineStyle: 'none' } as never}
       />
       {value.length > 0 && (
-        <Pressable onPress={onClear} accessibilityRole="button" accessibilityLabel={tr('clear search')} style={{ padding: 6 }}>
+        <Pressable onPress={onClear} accessibilityRole="button" accessibilityLabel={tr('clear search')} style={{ minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}>
           {(s) => (
             <Txt size={13} weight="600" color={(s as { hovered?: boolean }).hovered ? t.ink : t.mut}>
-              {tr('clear ✕')}
+              {isMobile ? '✕' : tr('clear ✕')}
             </Txt>
           )}
         </Pressable>
@@ -61,7 +63,9 @@ export function SearchBar({ value, onChangeText, onSubmit, onClear }: Props) {
         accessibilityRole="button"
         style={(s) => ({
           paddingVertical: 12,
-          paddingHorizontal: 26,
+          minHeight: 44,
+          justifyContent: 'center',
+          paddingHorizontal: isMobile ? 14 : 26,
           borderRadius: 13,
           backgroundColor: (s as { hovered?: boolean }).hovered ? link : '#141519',
         })}

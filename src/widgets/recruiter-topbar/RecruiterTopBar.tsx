@@ -68,7 +68,7 @@ export function RecruiterTopBar() {
       <Pressable
         key={n.key}
         onPress={() => router.push(n.href as never)}
-        style={{ paddingVertical: 6, paddingHorizontal: 10, borderRadius: 8, backgroundColor: on ? 'rgba(246,244,238,0.12)' : 'transparent' }}
+        style={{ minHeight: bp.isMobile ? 44 : undefined, justifyContent: 'center', paddingVertical: 6, paddingHorizontal: 10, borderRadius: 8, backgroundColor: on ? 'rgba(246,244,238,0.12)' : 'transparent' }}
       >
         <Txt size={12.5} weight="500" color={on ? '#F6F4EE' : '#a1a1aa'} style={{ whiteSpace: 'nowrap' } as never}>
           {tr(n.label)}
@@ -78,17 +78,17 @@ export function RecruiterTopBar() {
   });
 
   const rightCluster = (
-    <View style={{ marginLeft: 'auto', flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+    <View style={{ marginLeft: 'auto', flexDirection: 'row', alignItems: 'center', gap: bp.isMobile ? 6 : 12 }}>
       <Pressable
         onPress={() => router.push('/recruiter/new-job' as never)}
-        style={(state) => ({ backgroundColor: (state as { hovered?: boolean }).hovered ? '#c5f96a' : accent, paddingVertical: 7, paddingHorizontal: 14, borderRadius: 8 })}
+        style={(state) => ({ backgroundColor: (state as { hovered?: boolean }).hovered ? '#c5f96a' : accent, minHeight: bp.isMobile ? 44 : undefined, justifyContent: 'center', paddingVertical: 7, paddingHorizontal: 14, borderRadius: 8 })}
       >
         <Txt size={12.5} weight="600" color="#101114">
           {tr('+ new job')}
         </Txt>
       </Pressable>
       <View style={{ position: 'relative' }}>
-        <Pressable onPress={() => { setLangOpen((v) => !v); setMenuOpen(false); }} style={{ height: 32, borderRadius: 999, backgroundColor: 'rgba(246,244,238,0.12)', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 9 }}>
+        <Pressable onPress={() => { setLangOpen((v) => !v); setMenuOpen(false); }} style={{ height: bp.isMobile ? 44 : 32, borderRadius: 999, backgroundColor: 'rgba(246,244,238,0.12)', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 9 }}>
           <Txt size={10.5} weight="700" mono color="#F6F4EE">
             {lang.toUpperCase()} ▾
           </Txt>
@@ -107,13 +107,13 @@ export function RecruiterTopBar() {
           </View>
         )}
       </View>
-      <Pressable onPress={toggleDark} style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(246,244,238,0.12)', alignItems: 'center', justifyContent: 'center' }}>
+      <Pressable onPress={toggleDark} style={{ width: bp.isMobile ? 44 : 32, height: bp.isMobile ? 44 : 32, borderRadius: 22, backgroundColor: 'rgba(246,244,238,0.12)', alignItems: 'center', justifyContent: 'center' }}>
         <Txt size={14}>{dark ? '☀️' : '🌙'}</Txt>
       </Pressable>
       <View style={{ position: 'relative' }}>
         <Pressable
           onPress={() => { setMenuOpen((v) => !v); setLangOpen(false); }}
-          style={(state) => ({ width: 32, height: 32, borderRadius: 16, backgroundColor: '#DBE7FC', alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: (state as { hovered?: boolean }).hovered ? accent : 'transparent' })}
+          style={(state) => ({ width: bp.isMobile ? 44 : 32, height: bp.isMobile ? 44 : 32, borderRadius: 22, backgroundColor: '#DBE7FC', alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: (state as { hovered?: boolean }).hovered ? accent : 'transparent' })}
         >
           <Txt size={12} weight="700" color="#1e40af">{initials}</Txt>
         </Pressable>
@@ -149,8 +149,8 @@ export function RecruiterTopBar() {
   );
 
   return (
-    <View style={{ backgroundColor: '#141519', paddingTop: insets.top, zIndex: 20, ...(bp.isDesktop ? { height: 54, flexDirection: 'row' as const, alignItems: 'center' as const, paddingHorizontal: 26 } : { paddingHorizontal: 12, paddingVertical: 8, gap: 6 }) }}>
-      {bp.isDesktop ? (
+    <View style={{ backgroundColor: '#141519', paddingTop: insets.top, zIndex: 20, ...(!bp.isCompact ? { minHeight: 54 + insets.top, flexDirection: 'row' as const, alignItems: 'center' as const, paddingHorizontal: 26 } : { paddingHorizontal: 12, paddingVertical: 8, gap: 6 }) }}>
+      {!bp.isCompact ? (
         <>
           <Pressable onPress={() => router.push('/recruiter' as never)} style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
             <CatMark />
@@ -164,7 +164,7 @@ export function RecruiterTopBar() {
         </>
       ) : (
         <>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
             <Pressable onPress={() => router.push('/recruiter' as never)} style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
               <CatMark />
               <Txt size={14} weight="700" color="#F6F4EE" ls={-0.02}>dear company</Txt>

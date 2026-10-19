@@ -190,9 +190,9 @@ export function SavedPage() {
         </View>
       )}
 
-      <View style={{ flexDirection: bp.isMobile ? 'column' : 'row', gap: 24, paddingTop: 24, paddingHorizontal: g, alignItems: 'flex-start' }}>
+      <View style={{ flexDirection: bp.isCompact ? 'column' : 'row', gap: 24, paddingTop: 24, paddingHorizontal: g, alignItems: 'flex-start' }}>
         {/* saved jobs */}
-        <View style={{ flex: bp.isMobile ? undefined : 1, width: '100%', minWidth: 0 }}>
+        <View style={{ flex: bp.isCompact ? undefined : 1, width: '100%', minWidth: 0 }}>
           <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 10, paddingTop: 2, paddingHorizontal: 4, paddingBottom: 12 }}>
             <Txt size={14} weight="700">{tr('saved jobs')}</Txt>
             {jobs && !jobsError && (
@@ -261,7 +261,7 @@ export function SavedPage() {
         </View>
 
         {/* saved searches */}
-        <View style={{ width: bp.isMobile ? '100%' : 380, gap: 10 }}>
+        <View style={{ width: bp.isCompact ? '100%' : 380, gap: 10 }}>
           <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 10, paddingTop: 2, paddingHorizontal: 4, paddingBottom: 2 }}>
             <Txt size={14} weight="700">{tr('saved searches')}</Txt>
             {searches && !searchesError && (

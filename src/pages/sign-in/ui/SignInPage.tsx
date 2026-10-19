@@ -29,6 +29,7 @@ export function SignInPage() {
 
   const [mode, setModeRaw] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [pass, setPass] = useState('');
   const [name, setName] = useState('');
   const [pass2, setPass2] = useState('');
@@ -60,13 +61,14 @@ export function SignInPage() {
 
   const b2bOk = !recruiter || (orgName.trim() && designation.trim() && hasAt(orgEmail));
   const registerReady = !!name.trim() && hasAt(email) && pass.length >= 8 && pass2.length > 0 && !!b2bOk;
-  const signInReady = hasAt(email) && pass.length > 0;
+  const identifier = email.trim() || (recruiter ? phone.trim() : '');
+  const signInReady = (email.trim() ? hasAt(email) : recruiter && !!phone.trim()) && pass.length > 0;
 
   const doSignIn = useCallback(async () => {
     if (!signInReady || submitting) return;
-    const ok = await signIn(email.trim(), pass);
+    const ok = await signIn(identifier, pass);
     if (ok) goHome();
-  }, [email, goHome, pass, signIn, signInReady, submitting]);
+  }, [identifier, goHome, pass, signIn, signInReady, submitting]);
 
   const doRegister = useCallback(async () => {
     if (submitting) return;
@@ -82,10 +84,11 @@ export function SignInPage() {
       password2: pass2,
       name: name.trim(),
       user_type: recruiter ? 'b2b' : 'b2c',
+      ...(recruiter && phone.trim() ? { phone_number: phone.trim() } : null),
       ...(recruiter ? { organization_name: orgName.trim(), designation: designation.trim(), organization_email: orgEmail.trim() } : null),
     });
     if (ok) setMode('sent');
-  }, [designation, email, name, orgEmail, orgName, pass, pass2, recruiter, register, registerReady, setMode, submitting, tr]);
+  }, [designation, email, name, orgEmail, orgName, pass, pass2, phone, recruiter, register, registerReady, setMode, submitting, tr]);
 
   const doResend = useCallback(async () => {
     if (busy || !hasAt(email)) return;
@@ -147,7 +150,7 @@ export function SignInPage() {
             <Txt size={28} weight="700" ls={-0.03} lh={1.15}>
               {recruiter ? tr('hiring for a team?') : tr('new here?')}
             </Txt>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
               <Txt size={28} weight="700" ls={-0.03} lh={1.15}>
                 {tr("let's get you")}
               </Txt>
@@ -159,7 +162,7 @@ export function SignInPage() {
             <Txt size={28} weight="700" ls={-0.03} lh={1.15}>
               {tr('forgot it?')}
             </Txt>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
               <Txt size={28} weight="700" ls={-0.03} lh={1.15}>
                 {tr('happens to the')}
               </Txt>
@@ -171,7 +174,7 @@ export function SignInPage() {
             <Txt size={28} weight="700" ls={-0.03} lh={1.15}>
               {tr('one more step —')}
             </Txt>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
               <Txt size={28} weight="700" ls={-0.03} lh={1.15}>
                 {tr('check your')}
               </Txt>
@@ -183,7 +186,7 @@ export function SignInPage() {
             <Txt size={28} weight="700" ls={-0.03} lh={1.15}>
               {tr("hi. let's find you")}
             </Txt>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
               <Txt size={28} weight="700" ls={-0.03} lh={1.15}>
                 {recruiter ? tr('someone') : tr('something')}
               </Txt>
@@ -204,6 +207,12 @@ export function SignInPage() {
       <View style={{ gap: 10 }}>
         {mode === 'register' && <AuthField value={name} onChangeText={setName} placeholder={tr('your name')} />}
         {showFields && <AuthField value={email} onChangeText={setEmail} placeholder={tr('email')} />}
+        {recruiter && (mode === 'signin' || mode === 'register') && (
+          <>
+            {mode === 'signin' && <Txt size={12} color={t.mut} align="center">{tr('or')}</Txt>}
+            <AuthField value={phone} onChangeText={setPhone} placeholder={tr('phone number')} inputMode="tel" />
+          </>
+        )}
         {(mode === 'signin' || mode === 'register') && (
           <AuthField value={pass} onChangeText={setPass} placeholder={mode === 'register' ? tr('password (8+ characters)') : tr('password')} secure onSubmitEditing={mode === 'signin' ? doSignIn : undefined} />
         )}

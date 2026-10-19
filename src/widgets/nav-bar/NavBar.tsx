@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { router, usePathname } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -46,7 +47,10 @@ export function NavBar() {
   const { langMenuOpen, toggleLangMenu } = useNavUi();
   const { rainOn, toggle: toggleRain } = useCalmSound();
 
+  useEffect(() => useNavUi.getState().closeAll(), [pathname]);
+
   const active = pathname.replace(/^\//, '').split('/')[0] || 'jobs';
+  const activeNav = active === 'job' || active === 'apply' ? 'jobs' : active;
   const avatarLetter = (user?.name?.trim()?.[0] ?? 'u').toLowerCase();
   const isPlus = !!user?.subscription?.is_active;
 
@@ -59,8 +63,8 @@ export function NavBar() {
           size={13.5}
           px={13}
           py={7}
-          bg={n.key === active ? '#141519' : 'transparent'}
-          color={n.key === active ? '#F6F4EE' : t.mut}
+          bg={n.key === activeNav ? '#141519' : 'transparent'}
+          color={n.key === activeNav ? '#F6F4EE' : t.mut}
           weight="500"
           onPress={() => router.push(`/${n.key}` as never)}
         />
@@ -84,7 +88,7 @@ export function NavBar() {
         onPress={toggleLangMenu}
         accessibilityRole="button"
         accessibilityLabel="language"
-        style={{ height: 34, borderRadius: 999, backgroundColor: t.chip, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 4, paddingHorizontal: 10 }}
+        style={{ height: bp.isMobile ? 44 : 34, borderRadius: 999, backgroundColor: t.chip, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 4, paddingHorizontal: 10 }}
       >
         <Txt size={11} weight="700" mono>
           {lang.toUpperCase()} ▾
@@ -120,8 +124,8 @@ export function NavBar() {
   );
 
   const rightCluster = (
-    <View style={{ marginLeft: 'auto', flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-      {bp.isDesktop && (
+    <View style={{ marginLeft: 'auto', flexDirection: 'row', alignItems: 'center', gap: bp.isMobile ? 6 : 10 }}>
+      {!bp.isCompact && (
         <Pressable
           onPress={() => router.push('/recruiter' as never)}
           accessibilityRole="link"
@@ -133,14 +137,14 @@ export function NavBar() {
         </Pressable>
       )}
       {langMenu}
-      <IconCircle icon={rainOn ? '🎧' : '🎶'} bg={rainOn ? accent : t.chip} onPress={toggleRain} />
-      <IconCircle icon={dark ? '☀️' : '🌙'} onPress={toggleDark} />
+      <IconCircle label={tr('calm sound')} icon={rainOn ? '🎧' : '🎶'} bg={rainOn ? accent : t.chip} onPress={toggleRain} />
+      <IconCircle label={tr('toggle dark mode')} icon={dark ? '☀️' : '🌙'} onPress={toggleDark} />
       {signedIn ? (
         <Pressable
           onPress={() => router.push('/profile' as never)}
           accessibilityRole="button"
           accessibilityLabel="profile"
-          style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: isPlus ? accent : '#141519', alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: bp.isMobile ? 44 : 34, height: bp.isMobile ? 44 : 34, borderRadius: 22, backgroundColor: isPlus ? accent : '#141519', alignItems: 'center', justifyContent: 'center' }}
         >
           <Txt size={13} weight="700" color={isPlus ? '#141519' : accent}>
             {avatarLetter}
@@ -155,17 +159,17 @@ export function NavBar() {
   return (
     <View
       style={{
-        position: bp.isDesktop ? ('sticky' as never) : 'relative',
+        position: !bp.isCompact ? ('sticky' as never) : 'relative',
         top: 0,
         zIndex: 10,
         backgroundColor: t.navbg,
         paddingTop: insets.top,
-        ...(bp.isDesktop
-          ? { height: 64, flexDirection: 'row' as const, alignItems: 'center' as const, paddingHorizontal: 44 }
+        ...(!bp.isCompact
+          ? { minHeight: 64 + insets.top, flexDirection: 'row' as const, alignItems: 'center' as const, paddingHorizontal: 44 }
           : { paddingHorizontal: 14, paddingVertical: 8, gap: 4 }),
       }}
     >
-      {bp.isDesktop ? (
+      {!bp.isCompact ? (
         <>
           <Logo onPress={() => router.push('/jobs' as never)} />
           <View style={{ flexDirection: 'row', gap: 4, marginLeft: 36, alignItems: 'center' }}>{navChips}</View>
@@ -173,7 +177,7 @@ export function NavBar() {
         </>
       ) : (
         <>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
             <Logo onPress={() => router.push('/jobs' as never)} />
             {rightCluster}
           </View>

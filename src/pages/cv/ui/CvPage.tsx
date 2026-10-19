@@ -36,19 +36,19 @@ export function CvPage() {
 
       <View
         style={{
-          flexDirection: bp.isMobile ? 'column' : 'row',
+          flexDirection: bp.isCompact ? 'column' : 'row',
           justifyContent: 'center',
           gap: 16,
           paddingTop: 30,
           paddingHorizontal: bp.gutter,
           paddingBottom: 10,
-          alignItems: bp.isMobile ? 'center' : 'stretch',
+          alignItems: bp.isCompact ? 'center' : 'stretch',
         }}
       >
-        <View style={bp.isMobile ? { width: '100%', maxWidth: 460 } : { width: 380 }}>
+        <View style={bp.isCompact ? { width: '100%', maxWidth: 460 } : { width: 380 }}>
           <UploadCard onUploaded={() => void resumes.reload()} />
         </View>
-        <View style={bp.isMobile ? { width: '100%', maxWidth: 460 } : { width: 380 }}>
+        <View style={bp.isCompact ? { width: '100%', maxWidth: 460 } : { width: 380 }}>
           <ResumesCard
             rows={resumes.rows}
             count={resumes.count}
@@ -63,7 +63,7 @@ export function CvPage() {
         </View>
       </View>
 
-      <View style={{ maxWidth: 776, width: '100%', alignSelf: 'center', marginTop: 14, paddingHorizontal: bp.gutter }}>
+      <View style={{ maxWidth: (bp.isCompact ? 460 : 776) + bp.gutter * 2, width: '100%', alignSelf: 'center', marginTop: 14, paddingHorizontal: bp.gutter }}>
         <CoverLettersCard />
       </View>
     </ScrollView>
