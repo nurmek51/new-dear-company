@@ -18,7 +18,7 @@ import { ApiError, humanize, pageFromUrl } from '@/shared/api';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { font, accent, link, useTheme } from '@/shared/theme';
-import { Overlay, Txt } from '@/shared/ui';
+import { EmptyState, Overlay, Txt } from '@/shared/ui';
 import { Board } from './Board';
 import { CandidateDetail, ProfileBody } from './CandidateDetail';
 import { Avatar, OutlineBtn, StatusPill, Toast, fmtDate, useToast } from './pipelineUi';
@@ -286,7 +286,7 @@ export function RecruiterJobPage() {
 
   const listPane = (
     <View style={{ width: bp.isMobile ? '100%' : 330, maxHeight: bp.isMobile ? Math.round(bp.height * 0.44) : undefined, borderRightWidth: bp.isMobile ? 0 : 1, borderRightColor: t.l09, borderBottomWidth: bp.isMobile ? 1 : 0, borderBottomColor: t.l09 }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 48 }}>
         {loading ? (
           <View style={{ padding: 30, alignItems: 'center' }}><ActivityIndicator color={t.mut} /></View>
         ) : error ? (
@@ -295,9 +295,7 @@ export function RecruiterJobPage() {
             <OutlineBtn label={tr('retry')} onPress={() => loadApplicants(page, query)} />
           </View>
         ) : inStage.length === 0 ? (
-          <View style={{ paddingVertical: 30, paddingHorizontal: 18 }}>
-            <Txt size={13} color={t.mut} align="center">{query ? tr('no one matches this search on this page') : tr('nobody in this stage yet')}</Txt>
-          </View>
+          <EmptyState description={query ? tr('no one matches this search on this page') : tr('nobody in this stage yet')} />
         ) : (
           inStage.map((a) => {
             const active = a.id === selId;
@@ -341,7 +339,7 @@ export function RecruiterJobPage() {
   );
 
   const emptyDetail = (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 400, padding: 28, gap: 22 }}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: bp.isMobile ? 180 : 400, padding: 28, gap: 22 }}>
       <Txt size={13} color={t.mut2}>{loading ? '' : tr('select a candidate on the left')}</Txt>
       {job?.show_profile_matches && (matches === null ? !matchErr : matches.length > 0) ? (
         <View style={{ width: '100%', maxWidth: 520, borderWidth: 1, borderColor: t.l10, borderRadius: 12, paddingVertical: 16, paddingHorizontal: 18, gap: 10 }}>
@@ -391,7 +389,7 @@ export function RecruiterJobPage() {
       ) : (
         <View style={{ flex: 1, flexDirection: bp.isMobile ? 'column' : 'row', minHeight: 0 }}>
           {listPane}
-          <ScrollView style={{ flex: 1, backgroundColor: t.card }} contentContainerStyle={{ flexGrow: 1 }}>
+          <ScrollView style={{ flex: 1, backgroundColor: t.card }} contentContainerStyle={{ flexGrow: 1, paddingBottom: 48 }}>
             {sel ? (
               <CandidateDetail
                 applicant={sel}

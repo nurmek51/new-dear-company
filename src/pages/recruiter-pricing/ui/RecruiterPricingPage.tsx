@@ -1,7 +1,7 @@
 import * as Linking from 'expo-linking';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, ScrollView, View, type ViewStyle } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, View, type ViewStyle } from 'react-native';
 import {
   cancel as cancelSubscription,
   createCheckout,
@@ -20,6 +20,7 @@ import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, link, useTheme } from '@/shared/theme';
 import { Overlay, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 
 /**
  * Plans & pricing (Recruiter ATS prototype 724–788). KEPT: header, 3-column
@@ -240,7 +241,7 @@ export function RecruiterPricingPage() {
   });
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingBottom: 30 }}>
+    <ScreenScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingBottom: 30 }}>
       <View style={{ maxWidth: 960, width: '100%', alignSelf: 'center', paddingVertical: 30, paddingHorizontal: gutter }}>
         <Txt size={bp.isMobile ? 22 : 24} weight="700" ls={-0.03}>{tr('plans & pricing')}</Txt>
         <Txt size={13} color={t.mut} style={{ marginTop: 4 }}>{tr('start small, upgrade when hiring grows')}</Txt>
@@ -359,6 +360,6 @@ export function RecruiterPricingPage() {
           </Pressable>
         </View>
       </Overlay>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

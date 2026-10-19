@@ -1,13 +1,14 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { jobsApi, type Job, type JobSearchParams, type SavedJob, type SearchQuery } from '@/entities/job';
 import { useActiveJobParams } from '@/features/job-feed';
 import { ApiError, errorMessageFrom } from '@/shared/api';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, accentInk, danger, useTheme } from '@/shared/theme';
-import { Txt } from '@/shared/ui';
+import { EmptyState, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { NewSavedSearchTile } from './NewSavedSearchTile';
 import { SavedJobCard } from './SavedJobCard';
 import { SavedSearchCard } from './SavedSearchCard';
@@ -169,7 +170,7 @@ export function SavedPage() {
   const currentChips = paramChips(snapshotParams(activeParams));
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 44 }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: 44 }}>
       <View style={{ paddingTop: 38, paddingHorizontal: g, paddingBottom: 8, gap: 12 }}>
         <Txt size={h1} weight="700" lh={1.05} ls={-0.04} accessibilityRole="header">
           {tr('your')}{' '}
@@ -217,12 +218,12 @@ export function SavedPage() {
           )}
 
           {jobs !== null && !jobsError && jobs.length === 0 && (
-            <View style={{ backgroundColor: t.card, borderRadius: 20, padding: 24, gap: 10, alignItems: 'flex-start' }}>
-              <Txt size={15} weight="700">{tr('nothing saved yet')}</Txt>
-              <Txt size={13.5} color={t.mut}>{tr('tap "save" on any job in the feed and it lands here.')}</Txt>
+            <View style={{ backgroundColor: t.card, borderRadius: 20 }}>
+              <EmptyState title={tr('nothing saved yet')} description={tr('tap "save" on any job in the feed and it lands here.')}>
               <Pressable onPress={() => router.push('/jobs' as never)} accessibilityRole="link" style={{ backgroundColor: accent, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 10 }}>
                 <Txt size={12.5} weight="700" color={accentInk}>{tr('browse jobs')}</Txt>
               </Pressable>
+              </EmptyState>
             </View>
           )}
 
@@ -283,9 +284,8 @@ export function SavedPage() {
             </View>
           )}
           {searches !== null && !searchesError && searches.length === 0 && (
-            <View style={{ backgroundColor: t.card, borderRadius: 20, padding: 20, gap: 6 }}>
-              <Txt size={15} weight="700">{tr('no saved searches yet')}</Txt>
-              <Txt size={12.5} color={t.mut}>{tr('save the filters you keep re-typing and re-run them with one tap.')}</Txt>
+            <View style={{ backgroundColor: t.card, borderRadius: 20 }}>
+              <EmptyState title={tr('no saved searches yet')} description={tr('save the filters you keep re-typing and re-run them with one tap.')} />
             </View>
           )}
           {searches?.map((q) => (
@@ -302,6 +302,6 @@ export function SavedPage() {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

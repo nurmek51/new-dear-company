@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { ActivityIndicator, Image, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, View } from 'react-native';
 import {
   FUNNEL_GROUPS,
   activeCount,
@@ -17,6 +17,7 @@ import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, link, useTheme, type Palette } from '@/shared/theme';
 import { Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 
 /**
  * Recruiter overview (Recruiter ATS prototype 226–325). KEPT: date header,
@@ -149,15 +150,15 @@ export function RecruiterOverviewPage() {
         accessibilityLabel={j.title}
         style={(s) => ({ flexDirection: bp.isMobile ? 'column' : 'row', alignItems: bp.isMobile ? 'stretch' : 'center', gap: 14, paddingVertical: 13, paddingHorizontal: 18, borderBottomWidth: 1, borderBottomColor: t.l06, backgroundColor: (s as { hovered?: boolean }).hovered ? t.hov : 'transparent' })}
       >
-        <View style={{ flex: 1.4, minWidth: 0 }}>
+        <View style={{ flex: bp.isMobile ? undefined : 1.4, minWidth: 0 }}>
           <Txt size={13.5} weight="600">{j.title}</Txt>
           <Txt size={11.5} color={t.mut} style={{ marginTop: 2 }}>{j.text}</Txt>
           <Avatars urls={j.images ?? []} />
         </View>
-        <View style={{ flex: 2, flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+        <View style={{ flex: bp.isMobile ? undefined : 2, flexDirection: 'row', gap: 2, alignItems: 'center' }}>
           {bars.length ? bars.map((b) => <View key={b.k} style={{ flex: b.n, height: 20, backgroundColor: barColor(t, b.k), borderRadius: 3 }} />) : <Txt size={11.5} color={t.mut2}>{tr('no applications yet')}</Txt>}
         </View>
-        <View style={{ flex: 0.8, alignItems: bp.isMobile ? 'flex-start' : 'flex-end' }}>
+        <View style={{ flex: bp.isMobile ? undefined : 0.8, alignItems: bp.isMobile ? 'flex-start' : 'flex-end' }}>
           {active != null && <Txt size={12.5} color={t.mut}>{active} {tr('active')}</Txt>}
         </View>
       </Pressable>
@@ -168,7 +169,7 @@ export function RecruiterOverviewPage() {
   const next = pageFromUrl(jobs?.next ?? null);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingBottom: 26 }}>
+    <ScreenScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingBottom: 26 }}>
       <View style={{ paddingTop: 26, paddingHorizontal: gutter }}>
         <Txt size={bp.isMobile ? 22 : 24} weight="700" ls={-0.03}>{todayLabel()}</Txt>
         <Txt size={13} color={t.mut} style={{ marginTop: 4 }}>
@@ -191,18 +192,18 @@ export function RecruiterOverviewPage() {
         </View>
       ) : (
         <View style={{ flexDirection: bp.isMobile ? 'column' : 'row', gap: 14, paddingTop: 18, paddingHorizontal: gutter }}>
-          <View style={{ flex: 1.5, gap: 14, minWidth: 0 }}>
+          <View style={{ flex: bp.isMobile ? undefined : 1.5, gap: 14, minWidth: 0 }}>
             <Panel title={tr('open jobs')}>
               {jobRows.length ? jobRows : !jobs ? (
                 <View style={{ padding: 18 }}>
                   <Txt size={13} color={t.mut} lh={1.5}>{tr('your jobs could not be loaded. use retry above.')}</Txt>
                 </View>
               ) : (
-                <View style={{ padding: 18, gap: 10 }}>
+                <View style={{ paddingHorizontal: 20, paddingVertical: 28, gap: 14 }}>
                   <Txt size={13} color={t.mut} lh={1.5}>
                     {tr('no jobs posted yet. publish your first job to start receiving applications.')}
                   </Txt>
-                  <Pressable onPress={() => router.push('/recruiter/new-job' as never)} accessibilityRole="button" style={{ alignSelf: 'flex-start', backgroundColor: accent, borderRadius: 8, paddingVertical: 7, paddingHorizontal: 14 }}>
+                  <Pressable onPress={() => router.push('/recruiter/new-job' as never)} accessibilityRole="button" style={{ alignSelf: 'flex-start', backgroundColor: accent, borderRadius: 8, minHeight: 44, justifyContent: 'center', paddingVertical: 10, paddingHorizontal: 14 }}>
                     <Txt size={12.5} weight="600" color="#101114">{tr('post your first job')}</Txt>
                   </Pressable>
                 </View>
@@ -222,7 +223,7 @@ export function RecruiterOverviewPage() {
             </Panel>
           </View>
 
-          <View style={{ flex: 1, gap: 14, minWidth: 0 }}>
+          <View style={{ flex: bp.isMobile ? undefined : 1, gap: 14, minWidth: 0 }}>
             <View style={{ backgroundColor: '#141519', borderRadius: 14, padding: 18 }}>
               <Txt size={12} weight="700" color="#a1a1aa" style={{ textTransform: 'uppercase', letterSpacing: 0.6 }}>{tr('pipeline right now')}</Txt>
               <View style={{ flexDirection: 'row', gap: 22, marginTop: 12, flexWrap: 'wrap' }}>
@@ -256,6 +257,6 @@ export function RecruiterOverviewPage() {
           </View>
         </View>
       )}
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

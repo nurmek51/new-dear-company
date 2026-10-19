@@ -163,10 +163,11 @@ export function NavBar() {
         top: 0,
         zIndex: 10,
         backgroundColor: t.navbg,
-        paddingTop: insets.top,
         ...(!bp.isCompact
-          ? { minHeight: 64 + insets.top, flexDirection: 'row' as const, alignItems: 'center' as const, paddingHorizontal: 44 }
-          : { paddingHorizontal: 14, paddingVertical: 8, gap: 4 }),
+          ? { minHeight: 72 + insets.top, flexDirection: 'row' as const, alignItems: 'center' as const, paddingHorizontal: 44 }
+          : { paddingHorizontal: 14, gap: 4 }),
+        paddingTop: insets.top + 12,
+        paddingBottom: 12,
       }}
     >
       {!bp.isCompact ? (

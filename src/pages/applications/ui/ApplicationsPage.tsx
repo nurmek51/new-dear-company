@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, TextInput, View } from 'react-native';
 import {
   STAGE_LABELS,
   STAGE_ORDER,
@@ -15,7 +15,8 @@ import { ApiError, emptyPage, errorMessageFrom, pageFromUrl, type Paginated } fr
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, accentInk, danger, font, useTheme } from '@/shared/theme';
-import { Btn, IconCircle, Txt } from '@/shared/ui';
+import { EmptyState, Btn, IconCircle, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { ApplicationCard } from './ApplicationCard';
 import { ConfirmActionModal } from './ConfirmActionModal';
 
@@ -101,7 +102,7 @@ export function ApplicationsPage() {
   const h1 = isMobile ? 29 : 46;
 
   return (
-    <ScrollView>
+    <ScreenScrollView>
       <View style={{ paddingTop: 36, paddingBottom: 8, paddingHorizontal: gutter, gap: 14 }}>
         <View>
           <Txt size={h1} weight="700" lh={1.05} ls={-0.04}>
@@ -230,20 +231,13 @@ export function ApplicationsPage() {
           </View>
         )}
         {!loading && !error && rows.length === 0 && (
-          <View style={{ backgroundColor: t.card, borderRadius: 20, padding: 24, gap: 6 }}>
-            <Txt size={16} weight="700">
-              {tr('no letters out yet.')}
-            </Txt>
-            <Txt size={13.5} color={t.mut} lh={1.5}>
-              {tr('apply to a job from the feed and it shows up here, with every status the company sets.')}
-            </Txt>
+          <View style={{ backgroundColor: t.card, borderRadius: 20 }}>
+            <EmptyState title={tr('no letters out yet.')} description={tr('apply to a job from the feed and it shows up here, with every status the company sets.')} />
           </View>
         )}
         {!loading && !error && rows.length > 0 && visible.length === 0 && (
-          <View style={{ backgroundColor: t.card, borderRadius: 20, padding: 24 }}>
-            <Txt size={13.5} color={t.mut}>
-              {q ? tr('nothing on this page matches that.') : tr('nothing in this stage on this page.')}
-            </Txt>
+          <View style={{ backgroundColor: t.card, borderRadius: 20 }}>
+            <EmptyState description={q ? tr('nothing on this page matches that.') : tr('nothing in this stage on this page.')} />
           </View>
         )}
         {!loading && !error && visible.map((row) => (
@@ -287,6 +281,6 @@ export function ApplicationsPage() {
         }}
         onConfirm={(notes) => void confirmAction(notes)}
       />
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

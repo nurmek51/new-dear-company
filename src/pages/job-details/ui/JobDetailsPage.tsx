@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Image, Linking, Platform, Pressable, ScrollView, Share, View } from 'react-native';
+import { ActivityIndicator, Image, Linking, Platform, Pressable, Share, View } from 'react-native';
 import { jobsApi, type Job } from '@/entities/job';
 import { useAuth } from '@/entities/user';
 import { htmlToText, locationLabel, logoTone, postedAgo, salaryLabel, useSavedJobs } from '@/features/job-feed';
@@ -9,6 +9,7 @@ import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, accentInk, link, useTheme } from '@/shared/theme';
 import { Btn, Card, Chip, LogoBadge, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { MatchPanel } from './MatchPanel';
 import { SimilarJobs } from './SimilarJobs';
 
@@ -221,7 +222,7 @@ export function JobDetailsPage() {
   );
 
   return (
-    <ScrollView contentContainerStyle={{ ...pad, maxWidth: 880, width: '100%', alignSelf: 'center', gap: 14 }}>
+    <ScreenScrollView contentContainerStyle={{ ...pad, maxWidth: 880, width: '100%', alignSelf: 'center', gap: 14 }}>
       <BackLink onPress={back} label={tr('← back to the feed')} />
 
       <View style={{ flexDirection: bp.isMobile ? 'column' : 'row', alignItems: 'flex-start', gap: 20 }}>
@@ -333,7 +334,7 @@ export function JobDetailsPage() {
       )}
 
       <SimilarJobs jobId={job.id} />
-    </ScrollView>
+    </ScreenScrollView>
   );
 }
 

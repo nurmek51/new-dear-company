@@ -149,7 +149,7 @@ export function RecruiterTopBar() {
   );
 
   return (
-    <View style={{ backgroundColor: '#141519', paddingTop: insets.top, zIndex: 20, ...(!bp.isCompact ? { minHeight: 54 + insets.top, flexDirection: 'row' as const, alignItems: 'center' as const, paddingHorizontal: 26 } : { paddingHorizontal: 12, paddingVertical: 8, gap: 6 }) }}>
+    <View style={{ backgroundColor: '#141519', zIndex: 20, ...(!bp.isCompact ? { minHeight: 64 + insets.top, flexDirection: 'row' as const, alignItems: 'center' as const, paddingHorizontal: 26 } : { paddingHorizontal: 12, gap: 6 }), paddingTop: insets.top + 12, paddingBottom: 12 }}>
       {!bp.isCompact ? (
         <>
           <Pressable onPress={() => router.push('/recruiter' as never)} style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>

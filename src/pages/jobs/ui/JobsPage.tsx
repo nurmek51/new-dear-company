@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { getJobPageSuggestedSearches, type JobSearchParams } from '@/entities/job';
 import { useAuth } from '@/entities/user';
 import {
@@ -18,6 +18,7 @@ import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, accentInk, useTheme } from '@/shared/theme';
 import { Btn, Chip, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { JobFilterPanel } from '@/widgets/job-filters';
 import { JobCard } from './JobCard';
 import { Pager } from './Pager';
@@ -108,7 +109,7 @@ export function JobsPage() {
   const sidebar = <JobFilterPanel value={params} onChange={setParams} />;
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 44 }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: 44 }}>
       {/* hero + stats + search (design 631–659) */}
       <View style={{ paddingTop: 36, paddingHorizontal: bp.gutter, paddingBottom: 10, gap: 16 }}>
         <View style={{ gap: 6, alignItems: 'flex-start' }}>
@@ -294,6 +295,6 @@ export function JobsPage() {
           )}
         </View>
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

@@ -8,3 +8,4 @@ export { LogoBadge } from './LogoBadge';
 export { Overlay } from './Overlay';
 export { Toggle } from './Toggle';
 export { Txt, type Weight } from './Txt';
+export { EmptyState } from './EmptyState';

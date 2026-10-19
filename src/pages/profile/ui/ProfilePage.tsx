@@ -251,7 +251,7 @@ export function ProfilePage() {
       {/* two-column grid (1fr 1fr, gap 24, max 1100) */}
       <View style={{ flexDirection: isMobile ? 'column' : 'row', gap: 24, paddingTop: 24, paddingHorizontal: gutter, maxWidth: 1100 + gutter * 2, alignItems: 'flex-start' }}>
         {/* left */}
-        <View style={{ flex: 1, width: '100%', gap: 14 }}>
+        <View style={{ flex: isMobile ? undefined : 1, width: '100%', gap: 14 }}>
           <Card radius={20} padding={24} gap={16}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
               <Pressable onPress={pickPicture} accessibilityRole="button" accessibilityLabel={tr('change photo')} style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: '#141519', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
@@ -328,7 +328,7 @@ export function ProfilePage() {
         </View>
 
         {/* right */}
-        <View style={{ flex: 1, width: '100%', gap: 14 }}>
+        <View style={{ flex: isMobile ? undefined : 1, width: '100%', gap: 14 }}>
           <Card radius={20} padding={24} gap={14}>
             <View style={{ gap: 3 }}>
               <Txt size={17} weight="700" ls={-0.01}>

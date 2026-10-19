@@ -1,7 +1,7 @@
 import * as ExpoLinking from 'expo-linking';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Linking, Platform, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Linking, Platform, Pressable, View } from 'react-native';
 import {
   isFreePackage,
   packagePrice,
@@ -16,6 +16,7 @@ import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, accentInk, danger, useTheme } from '@/shared/theme';
 import { Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 
 /** Stripe accepts only http(s) return URLs, so native builds return to the web origin (EXPO_PUBLIC_WEB_ORIGIN) when set. */
 function returnUrl(result: 'success' | 'cancel'): string {
@@ -186,7 +187,7 @@ export function PlusPage() {
   const onPlan = !!current && current.is_active;
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 48 }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: 48 }}>
       <View style={{ width: '100%', maxWidth: 880, alignSelf: 'center', paddingTop: 38, paddingHorizontal: g, gap: 18 }}>
         <Txt size={h1} weight="700" lh={1.05} ls={-0.04} accessibilityRole="header">
           {tr('job hunting on hard mode?')}{'\n'}
@@ -364,7 +365,7 @@ export function PlusPage() {
                 { k: current.auto_renew ? tr('renews') : tr('access until'), v: dateText(current.end_date) },
                 { k: tr('credits'), v: current.available_credits == null ? '—' : String(current.available_credits) },
               ].map((row) => (
-                <View key={row.k} style={{ flex: 1, backgroundColor: t.bg, borderRadius: 13, paddingVertical: 13, paddingHorizontal: 15, gap: 3 }}>
+                <View key={row.k} style={{ flex: bp.isMobile ? undefined : 1, backgroundColor: t.bg, borderRadius: 13, paddingVertical: 13, paddingHorizontal: 15, gap: 3 }}>
                   <Txt size={11} color={t.mut2}>{row.k}</Txt>
                   <Txt size={13.5} weight="700">{row.v}</Txt>
                 </View>
@@ -428,6 +429,6 @@ export function PlusPage() {
           </View>
         )}
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

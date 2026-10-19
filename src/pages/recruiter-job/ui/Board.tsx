@@ -29,7 +29,7 @@ export function Board({
   const columns: PipelineStage[] = [...PIPELINE_STAGES, CLOSED_STAGE];
   return (
     <ScrollView horizontal={bp.isMobile} contentContainerStyle={{ flexGrow: 1 }} showsHorizontalScrollIndicator={false}>
-      <View style={{ flexDirection: 'row', gap: 12, paddingTop: 18, paddingHorizontal: gutter, paddingBottom: 26, flex: 1, alignItems: 'flex-start' }}>
+      <View style={{ flexDirection: 'row', gap: 12, paddingTop: 18, paddingHorizontal: gutter, paddingBottom: 48, flex: 1, alignItems: 'flex-start' }}>
         {columns.map((st) => {
           const cards = rows.filter((r) => stageOf(r.status) === st);
           const hired = st === 'hired';
@@ -70,7 +70,7 @@ export function Board({
                 </Pressable>
               ))}
               {cards.length === 0 ? (
-                <View style={{ borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.l25, borderRadius: 12, padding: 14 }}>
+                <View style={{ borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.l25, borderRadius: 12, paddingVertical: 24, paddingHorizontal: 16 }}>
                   <Txt size={12} color={t.mut} align="center">{tr('nobody here on this page')}</Txt>
                 </View>
               ) : null}

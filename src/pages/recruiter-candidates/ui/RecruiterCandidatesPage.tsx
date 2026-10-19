@@ -7,7 +7,8 @@ import { ApiError, pageFromUrl, type Paginated } from '@/shared/api';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, font, link, useTheme } from '@/shared/theme';
-import { Txt } from '@/shared/ui';
+import { EmptyState, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { EMPTY_FILTERS, ORDERINGS, toListParams, type Filters } from '../model/params';
 
 type Mode = 'browse' | 'ai';
@@ -135,7 +136,7 @@ export function RecruiterCandidatesPage() {
   );
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 26 }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: 26 }}>
       <View style={{ paddingTop: 24, paddingHorizontal: gutter }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           <Txt size={bp.isMobile ? 22 : 24} weight="700" ls={-0.03}>{tr('all candidates')}</Txt>
@@ -270,17 +271,16 @@ export function RecruiterCandidatesPage() {
                 <OutlineBtn label={tr('retry')} onPress={() => (mode === 'browse' ? void load(query, filters, page) : void runAi())} />
               </View>
             ) : mode === 'ai' && aiRows === null ? (
-              <EmptyBlock title={tr('describe the person you are looking for')} sub={tr('the ai ranks public profiles by how well they fit the description.')} />
+              <EmptyState title={tr('describe the person you are looking for')} description={tr('the ai ranks public profiles by how well they fit the description.')} />
             ) : (
-              <View style={{ paddingVertical: 36, paddingHorizontal: 20, alignItems: 'center' }}>
-                <Txt size={13.5} weight="600">{mode === 'ai' ? tr('no profiles matched that description') : query || activeFilterCount ? tr('no candidates match') : tr('the pool is empty right now')}</Txt>
+              <EmptyState title={mode === 'ai' ? tr('no profiles matched that description') : query || activeFilterCount ? tr('no candidates match') : tr('the pool is empty right now')}>
                 <Txt size={12.5} color={t.mut} style={{ marginTop: 4 }} align="center">
                   {mode === 'ai' ? tr('try fewer constraints or different wording.') : tr('try a name, a skill or a title — or ')}
                   {mode === 'browse' && (query || activeFilterCount) ? (
                     <Txt size={12.5} color={link} onPress={clearAll} accessibilityRole="button">{tr('clear the search')}</Txt>
                   ) : null}
                 </Txt>
-              </View>
+              </EmptyState>
             )}
           </View>
         )}
@@ -299,7 +299,7 @@ export function RecruiterCandidatesPage() {
           ) : null}
         </View>
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }
 
@@ -308,16 +308,6 @@ function Head({ children, flex }: { children: string; flex: number }) {
   return (
     <View style={{ flex, minWidth: 0, paddingRight: 8 }}>
       <Txt size={11} weight="600" color={t.mut} ls={0.05} style={{ textTransform: 'uppercase' }}>{children}</Txt>
-    </View>
-  );
-}
-
-function EmptyBlock({ title, sub }: { title: string; sub: string }) {
-  const t = useTheme();
-  return (
-    <View style={{ paddingVertical: 36, paddingHorizontal: 20, alignItems: 'center' }}>
-      <Txt size={13.5} weight="600" align="center">{title}</Txt>
-      <Txt size={12.5} color={t.mut} style={{ marginTop: 4 }} align="center">{sub}</Txt>
     </View>
   );
 }

@@ -17,7 +17,8 @@ import { ApiError, pageFromUrl } from '@/shared/api';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, useTheme, type Palette } from '@/shared/theme';
-import { Txt } from '@/shared/ui';
+import { EmptyState, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 
 /**
  * Reports (Recruiter ATS prototype 954–1115). KEPT: header, "report for"
@@ -57,10 +58,10 @@ async function loadAll<T>(fetchPage: (p: number) => Promise<{ results: T[]; next
   return { items, truncated: true };
 }
 
-function Card({ children, dark }: { children: ReactNode; dark?: boolean }) {
+function Card({ children, dark, padding = 18 }: { children: ReactNode; dark?: boolean; padding?: number }) {
   const t = useTheme();
   return (
-    <View style={{ backgroundColor: dark ? '#141519' : t.card, borderWidth: dark ? 0 : 1, borderColor: t.l10, borderRadius: 14, padding: 18 }}>
+    <View style={{ backgroundColor: dark ? '#141519' : t.card, borderWidth: dark ? 0 : 1, borderColor: t.l10, borderRadius: 14, padding }}>
       {children}
     </View>
   );
@@ -163,7 +164,9 @@ export function RecruiterReportsPage() {
     );
   };
 
-  const effTable = (
+  const effTable = scopedEff.length === 0 ? (
+    <EmptyState description={tr('no hiring data yet — figures appear once a job receives applications.')} />
+  ) : (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ minWidth: '100%' }}>
       <View style={{ minWidth: 600, flex: 1 }}>
         <View style={{ flexDirection: 'row', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: t.l08 }}>
@@ -181,13 +184,12 @@ export function RecruiterReportsPage() {
             <Txt size={12.5} mono style={{ flex: 1, textAlign: 'right' }}>{fmtDays(r.time_to_fill_in_days)} {r.time_to_fill_in_days == null ? '' : tr('d')}</Txt>
           </View>
         ))}
-        {!scopedEff.length && <Txt size={12.5} color={t.mut} style={{ paddingVertical: 12 }}>{tr('no hiring data yet — figures appear once a job receives applications.')}</Txt>}
       </View>
     </ScrollView>
   );
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingBottom: 26 }}>
+    <ScreenScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingBottom: 26 }}>
       <View style={{ paddingTop: 24, paddingHorizontal: gutter }}>
         <Txt size={bp.isMobile ? 22 : 24} weight="700" ls={-0.03}>{scope == null ? tr('reports') : `${tr('reports')} — ${scope}`}</Txt>
         <Txt size={13} color={t.mut} style={{ marginTop: 4 }}>{scope == null ? tr('across all open jobs · live data') : tr('single job report · live data')}</Txt>
@@ -220,28 +222,26 @@ export function RecruiterReportsPage() {
 
           {rows.length === 0 && !error && pipeline != null && (
             <View style={{ marginHorizontal: gutter, marginTop: 18 }}>
-              <Card>
-                <Txt size={13} color={t.mut} lh={1.5}>
-                  {tr('no pipeline yet. reports fill in as candidates apply to your jobs.')}
-                </Txt>
+              <Card padding={0}>
+                <EmptyState description={tr('no pipeline yet. reports fill in as candidates apply to your jobs.')} />
               </Card>
             </View>
           )}
 
           <View style={{ flexDirection: bp.isMobile ? 'column' : 'row', gap: 14, paddingTop: 18, paddingHorizontal: gutter }}>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: bp.isMobile ? undefined : 1 }}>
               <Kpi dark label={tr('median time to hire')} value={median == null ? '—' : `${median} ${tr('days')}`} sub={median == null ? tr('no hires yet') : tr('application → offer accepted, per job')} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: bp.isMobile ? undefined : 1 }}>
               <Kpi label={tr('hiring efficiency')} value={eff.pct == null ? '—' : `${eff.hired} ${tr('of')} ${eff.applied}`} sub={eff.pct == null ? tr('no applications yet') : `${eff.pct}% ${tr('of applicants hired')}`} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: bp.isMobile ? undefined : 1 }}>
               <Kpi label={tr('active candidates')} value={`${activeCount(counts)}`} sub={`${counts.hired} ${tr('hired')} · ${counts.closed} ${tr('rejected or withdrawn')}`} />
             </View>
           </View>
 
           <View style={{ flexDirection: bp.isMobile ? 'column' : 'row', gap: 14, paddingTop: 14, paddingHorizontal: gutter }}>
-            <View style={{ flex: 1.4, gap: 14, minWidth: 0 }}>
+            <View style={{ flex: bp.isMobile ? undefined : 1.4, gap: 14, minWidth: 0 }}>
               <Card>
                 <Txt size={13} weight="700">{tr('pipeline funnel')}</Txt>
                 <Txt size={11.5} color={t.mut} style={{ marginTop: 2 }}>{scope == null ? tr('where candidates are right now, all jobs') : `${tr('where candidates are right now')} · ${scope}`}</Txt>
@@ -285,7 +285,7 @@ export function RecruiterReportsPage() {
               })()}
             </View>
 
-            <View style={{ flex: 1, gap: 14, minWidth: 0 }}>
+            <View style={{ flex: bp.isMobile ? undefined : 1, gap: 14, minWidth: 0 }}>
               {sections.length > 0 && (
                 <Card>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
@@ -316,6 +316,6 @@ export function RecruiterReportsPage() {
           </View>
         </>
       )}
-    </ScrollView>
+    </ScreenScrollView>
   );
 }

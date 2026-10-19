@@ -1,12 +1,13 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Image, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, View } from 'react-native';
 import { atsReportApi, type PostedJob } from '@/entities/ats-report';
 import { ApiError, pageFromUrl, type Paginated } from '@/shared/api';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, link, useTheme } from '@/shared/theme';
-import { Txt } from '@/shared/ui';
+import { EmptyState, Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 
 /**
  * Recruiter job list (recruiter.html "open jobs" card, lines 251–283, in the
@@ -53,7 +54,7 @@ export function RecruiterJobsPage() {
   const prevPage = data?.previous ? pageFromUrl(data.previous) ?? 1 : null;
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 26 }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: 26 }}>
       <View style={{ paddingTop: 26, paddingHorizontal: gutter, flexDirection: 'row', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
         <View style={{ flex: 1, minWidth: 200 }}>
           <Txt size={bp.isMobile ? 22 : 24} weight="700" ls={-0.03}>{tr('jobs')}</Txt>
@@ -92,10 +93,7 @@ export function RecruiterJobsPage() {
             </Pressable>
           </View>
         ) : rows.length === 0 ? (
-          <View style={{ padding: 30, alignItems: 'center', gap: 6 }}>
-            <Txt size={13.5} weight="600">{tr('no jobs posted yet')}</Txt>
-            <Txt size={12.5} color={t.mut} align="center">{tr('post your first job and applicants will show up here.')}</Txt>
-          </View>
+          <EmptyState title={tr('no jobs posted yet')} description={tr('post your first job and applicants will show up here.')} />
         ) : (
           rows.map((j) => <JobRow key={j.id} job={j} onPress={() => router.push(`/recruiter/job/${j.id}` as never)} />)
         )}
@@ -114,7 +112,7 @@ export function RecruiterJobsPage() {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }
 

@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { resumeApi, type Resume } from '@/entities/resume';
 import { useBreakpoint } from '@/shared/lib/responsive';
 import { useT } from '@/shared/lib/useT';
 import { accent, useTheme } from '@/shared/theme';
 import { Txt } from '@/shared/ui';
+import { ScreenScrollView } from '@/shared/ui/ScreenScrollView';
 import { usePagedList } from '../lib/usePagedList';
 import { CoverLettersCard } from './CoverLettersCard';
 import { ResumesCard } from './ResumesCard';
@@ -20,7 +21,7 @@ export function CvPage() {
   const h1 = bp.isMobile ? 29 : 46;
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 44 }}>
+    <ScreenScrollView contentContainerStyle={{ paddingBottom: 44 }}>
       <View style={{ paddingTop: 38, paddingHorizontal: bp.gutter, paddingBottom: 8, flexDirection: 'column', gap: 12, alignItems: 'center' }}>
         <Txt size={h1} weight="700" lh={1.05} ls={-0.04} align="center">{tr('first, your side')}</Txt>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -66,6 +67,6 @@ export function CvPage() {
       <View style={{ maxWidth: (bp.isCompact ? 460 : 776) + bp.gutter * 2, width: '100%', alignSelf: 'center', marginTop: 14, paddingHorizontal: bp.gutter }}>
         <CoverLettersCard />
       </View>
-    </ScrollView>
+    </ScreenScrollView>
   );
 }
