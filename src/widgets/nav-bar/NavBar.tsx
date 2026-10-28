@@ -30,6 +30,7 @@ const navDefs = [
   { key: 'applications', label: 'applications' },
   { key: 'saved', label: 'saved' },
   { key: 'cv', label: 'my cv' },
+  { key: 'referrals', label: 'referrals ✦' },
 ];
 
 export function NavBar() {

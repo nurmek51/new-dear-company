@@ -11,7 +11,7 @@ export default function SeekerLayout() {
   const t = useTheme();
   const pathname = usePathname();
   const screen = pathname.replace(/^\//, '').split('/')[0] || 'jobs';
-  const publicScreens = ['jobs', 'job', 'plus'];
+  const publicScreens = ['jobs', 'job', 'plus', 'referrals'];
   if (status !== 'signedIn' && !publicScreens.includes(screen)) {
     return <Redirect href={'/sign-in' as never} />;
   }
