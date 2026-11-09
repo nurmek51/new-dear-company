@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { authApi, useAuth } from '@/entities/user';
+import { useOnboardingFlags } from '@/features/onboarding';
 import { ApiError } from '@/shared/api';
 import { useT } from '@/shared/lib/useT';
 import { link, useTheme } from '@/shared/theme';
@@ -19,6 +20,7 @@ export function SignInPage() {
   const router = useRouter();
   const params = useLocalSearchParams<{ mode?: string }>();
   const recruiter = params.mode === 'recruiter';
+  const onboarded = useOnboardingFlags((s) => s.onboarded);
 
   const submitting = useAuth((s) => s.submitting);
   const authError = useAuth((s) => s.error);
@@ -52,7 +54,10 @@ export function SignInPage() {
 
   useEffect(() => () => clearError(), [clearError]);
 
-  const goHome = useCallback(() => router.replace('/' as never), [router]);
+  const goHome = useCallback(
+    () => router.replace((recruiter ? '/recruiter' : onboarded ? '/jobs' : '/onboarding') as never),
+    [recruiter, onboarded, router],
+  );
   const offline = tr('could not reach the server. check your connection and try again.');
   const failMsg = useCallback(
     (e: unknown, fallback: string) => (e instanceof ApiError ? (e.isNetworkError ? offline : e.message) : fallback),

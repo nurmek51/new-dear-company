@@ -64,7 +64,6 @@ export function OnboardingPage() {
   const router = useRouter();
   const { isMobile } = useBreakpoint();
   const status = useAuth((s) => s.status);
-  const user = useAuth((s) => s.user);
 
   const { obStep, obConsent, ob, toggleConsent, next, back, pickRole, setRoleOther, pickGrade, toggleFormat, reset } = useOnboardingStore();
   const finishOnboarding = useOnboardingFlags((s) => s.finishOnboarding);
@@ -76,8 +75,7 @@ export function OnboardingPage() {
 
   useEffect(() => {
     if (status === 'signedOut') router.replace('/sign-in' as never);
-    else if (status === 'signedIn' && user?.user_type === 'b2b') router.replace('/recruiter' as never);
-  }, [router, status, user?.user_type]);
+  }, [router, status]);
 
   const finish = useCallback(
     (write: boolean) => {

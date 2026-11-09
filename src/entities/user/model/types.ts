@@ -1,5 +1,7 @@
 import type { UserType } from '@/shared/api';
 
+export type UserRole = 'b2c' | 'b2b';
+
 /** `CustomUserDetailsSerializer` (spec §1.9). Identity key is `pk`. */
 export interface ApiUser {
   pk: string;
@@ -7,6 +9,8 @@ export interface ApiUser {
   phone_number: string | null;
   name: string;
   user_type: UserType;
+  /** Available profiles; user_type remains a legacy registration field. */
+  roles?: UserRole[];
   profile_picture: string | null;
   profile_picture_display: string | null;
   questionnaire_response_status: string;
@@ -33,6 +37,6 @@ export interface UserSubscriptionSummary {
   available_credits?: number;
 }
 
-export const isSeeker = (u: ApiUser | null) => !!u && u.user_type === 'b2c';
-export const isRecruiter = (u: ApiUser | null) => !!u && u.user_type === 'b2b';
+export const isSeeker = (u: ApiUser | null) => !!u && (u.roles ? u.roles.includes('b2c') : u.user_type === 'b2c');
+export const isRecruiter = (u: ApiUser | null) => !!u && (u.roles ? u.roles.includes('b2b') : u.user_type === 'b2b');
 export const isStaff = (u: ApiUser | null) => !!u && u.user_type === 'staff';
