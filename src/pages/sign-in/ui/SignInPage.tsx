@@ -84,7 +84,7 @@ export function SignInPage() {
       password2: pass2,
       name: name.trim(),
       user_type: recruiter ? 'b2b' : 'b2c',
-      ...(recruiter && phone.trim() ? { phone_number: phone.trim() } : null),
+      ...(phone.trim() ? { phone_number: phone.trim() } : null),
       ...(recruiter ? { organization_name: orgName.trim(), designation: designation.trim(), organization_email: orgEmail.trim() } : null),
     });
     if (ok) setMode('sent');
@@ -207,7 +207,7 @@ export function SignInPage() {
       <View style={{ gap: 10 }}>
         {mode === 'register' && <AuthField value={name} onChangeText={setName} placeholder={tr('your name')} />}
         {showFields && <AuthField value={email} onChangeText={setEmail} placeholder={tr('email')} />}
-        {recruiter && (mode === 'signin' || mode === 'register') && (
+        {(mode === 'register' || (recruiter && mode === 'signin')) && (
           <>
             {mode === 'signin' && <Txt size={12} color={t.mut} align="center">{tr('or')}</Txt>}
             <AuthField value={phone} onChangeText={setPhone} placeholder={tr('phone number')} inputMode="tel" />
