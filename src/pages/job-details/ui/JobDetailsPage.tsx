@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Image, Linking, Platform, Pressable, Share, View } from 'react-native';
 import { jobsApi, type Job } from '@/entities/job';
-import { useAuth } from '@/entities/user';
+import { useAuth, useIsSeeker } from '@/entities/user';
 import { htmlToText, locationLabel, logoTone, postedAgo, salaryLabel, useSavedJobs } from '@/features/job-feed';
 import { ApiError, errorMessageFrom, humanize } from '@/shared/api';
 import { useBreakpoint } from '@/shared/lib/responsive';
@@ -23,9 +23,9 @@ export function JobDetailsPage() {
   const tr = useT();
   const bp = useBreakpoint();
   const status = useAuth((s) => s.status);
-  const user = useAuth((s) => s.user);
   const signedIn = status === 'signedIn';
-  const isSeeker = signedIn && user?.user_type === 'b2c';
+  const hasSeekerProfile = useIsSeeker();
+  const isSeeker = signedIn && hasSeekerProfile;
   const saved = useSavedJobs();
 
   const [state, setState] = useState<LoadState>({ kind: 'loading' });

@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { authApi, useAuth } from '@/entities/user';
+import { useOnboardingFlags } from '@/features/onboarding';
 import { ApiError } from '@/shared/api';
 import { useT } from '@/shared/lib/useT';
 import { link, useTheme } from '@/shared/theme';
@@ -19,6 +20,7 @@ export function SignInPage() {
   const router = useRouter();
   const params = useLocalSearchParams<{ mode?: string }>();
   const recruiter = params.mode === 'recruiter';
+  const onboarded = useOnboardingFlags((s) => s.onboarded);
 
   const submitting = useAuth((s) => s.submitting);
   const authError = useAuth((s) => s.error);
@@ -52,7 +54,10 @@ export function SignInPage() {
 
   useEffect(() => () => clearError(), [clearError]);
 
-  const goHome = useCallback(() => router.replace('/' as never), [router]);
+  const goHome = useCallback(
+    () => router.replace((recruiter ? '/recruiter' : onboarded ? '/jobs' : '/onboarding') as never),
+    [recruiter, onboarded, router],
+  );
   const offline = tr('could not reach the server. check your connection and try again.');
   const failMsg = useCallback(
     (e: unknown, fallback: string) => (e instanceof ApiError ? (e.isNetworkError ? offline : e.message) : fallback),
@@ -84,7 +89,7 @@ export function SignInPage() {
       password2: pass2,
       name: name.trim(),
       user_type: recruiter ? 'b2b' : 'b2c',
-      ...(recruiter && phone.trim() ? { phone_number: phone.trim() } : null),
+      ...(phone.trim() ? { phone_number: phone.trim() } : null),
       ...(recruiter ? { organization_name: orgName.trim(), designation: designation.trim(), organization_email: orgEmail.trim() } : null),
     });
     if (ok) setMode('sent');
@@ -207,7 +212,7 @@ export function SignInPage() {
       <View style={{ gap: 10 }}>
         {mode === 'register' && <AuthField value={name} onChangeText={setName} placeholder={tr('your name')} />}
         {showFields && <AuthField value={email} onChangeText={setEmail} placeholder={tr('email')} />}
-        {recruiter && (mode === 'signin' || mode === 'register') && (
+        {(mode === 'register' || (recruiter && mode === 'signin')) && (
           <>
             {mode === 'signin' && <Txt size={12} color={t.mut} align="center">{tr('or')}</Txt>}
             <AuthField value={phone} onChangeText={setPhone} placeholder={tr('phone number')} inputMode="tel" />

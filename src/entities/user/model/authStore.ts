@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { ApiError, clearTokens, isApiConfigured, loadTokens, setUnauthorizedHandler } from '@/shared/api';
 import * as authApi from '../api/authApi';
-import type { ApiUser } from './types';
+import { isRecruiter, isSeeker, type ApiUser } from './types';
 
 export type AuthStatus = 'initializing' | 'signedOut' | 'signedIn' | 'error';
 
@@ -167,9 +167,9 @@ export const useAuth = create<AuthState>((set, get) => ({
 }));
 
 export function useIsRecruiter(): boolean {
-  return useAuth((s) => s.user?.user_type === 'b2b');
+  return useAuth((s) => isRecruiter(s.user));
 }
 
 export function useIsSeeker(): boolean {
-  return useAuth((s) => s.user?.user_type === 'b2c');
+  return useAuth((s) => isSeeker(s.user));
 }

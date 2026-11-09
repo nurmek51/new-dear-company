@@ -38,6 +38,17 @@ export async function register(input: RegisterInput): Promise<{ detail: string }
   });
 }
 
+export interface RecruiterProfileInput {
+  organization_name: string;
+  designation: string;
+  organization_email: string;
+}
+
+/** Adds a recruiter profile to the current account; returns the updated user. */
+export async function createRecruiterProfile(input: RecruiterProfileInput): Promise<ApiUser> {
+  return request<ApiUser>('/api/v1/accounts/recruiter-profile/', { method: 'POST', body: input });
+}
+
 /** POST /api/v1/auth/registration/verify-email/ (spec §1.2). */
 export async function verifyEmail(key: string): Promise<void> {
   await request('/api/v1/auth/registration/verify-email/', { method: 'POST', anonymous: true, body: { key } });
