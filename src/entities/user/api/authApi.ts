@@ -1,5 +1,6 @@
 import { loadTokens, request, saveTokens, type TokenPair } from '@/shared/api';
 import type { ApiUser } from '../model/types';
+import { normalizePhone, PHONE_ERROR } from '../model/phone';
 
 interface AuthResponse extends TokenPair {
   user: ApiUser;
@@ -8,10 +9,12 @@ interface AuthResponse extends TokenPair {
 
 /** POST /api/v1/auth/login/ (spec §1.4) — email or phone in `email`. */
 export async function login(identifier: string, password: string): Promise<ApiUser> {
+  const emailOrPhone = identifier.includes('@') ? identifier.trim() : normalizePhone(identifier);
+  if (!emailOrPhone) throw new Error(PHONE_ERROR);
   const res = await request<AuthResponse>('/api/v1/auth/login/', {
     method: 'POST',
     anonymous: true,
-    body: { email: identifier.trim(), password },
+    body: { email: emailOrPhone, password },
   });
   await saveTokens({ access: res.access, refresh: res.refresh });
   return res.user;
@@ -31,10 +34,12 @@ export interface RegisterInput {
 
 /** POST /api/v1/auth/registration/ (spec §1.1) → verification e-mail sent. */
 export async function register(input: RegisterInput): Promise<{ detail: string }> {
+  const phone = normalizePhone(input.phone_number ?? '');
+  if (phone === null) throw new Error(PHONE_ERROR);
   return request<{ detail: string }>('/api/v1/auth/registration/', {
     method: 'POST',
     anonymous: true,
-    body: input,
+    body: { ...input, phone_number: phone || undefined },
   });
 }
 

@@ -4,3 +4,4 @@ export { useAuth, useIsRecruiter, useIsSeeker } from './model/authStore';
 export type { AuthStatus } from './model/authStore';
 export { isRecruiter, isSeeker, isStaff } from './model/types';
 export type { ApiUser, UserRole, UserSubscriptionSummary } from './model/types';
+export { normalizePhone, PHONE_ERROR } from './model/phone';

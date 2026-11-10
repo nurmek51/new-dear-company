@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { authApi, useAuth } from '@/entities/user';
+import { authApi, normalizePhone, PHONE_ERROR, useAuth } from '@/entities/user';
 import { useOnboardingFlags } from '@/features/onboarding';
 import { ApiError } from '@/shared/api';
 import { useT } from '@/shared/lib/useT';
@@ -65,9 +65,11 @@ export function SignInPage() {
   );
 
   const b2bOk = !recruiter || (orgName.trim() && designation.trim() && hasAt(orgEmail));
-  const registerReady = !!name.trim() && hasAt(email) && pass.length >= 8 && pass2.length > 0 && !!b2bOk;
+  const phoneInvalid = normalizePhone(phone) === null;
+  const phoneError = phoneInvalid && (mode === 'register' || !email.trim()) ? tr(PHONE_ERROR) : null;
+  const registerReady = !!name.trim() && hasAt(email) && pass.length >= 8 && pass2.length > 0 && !!b2bOk && !phoneInvalid;
   const identifier = email.trim() || (recruiter ? phone.trim() : '');
-  const signInReady = (email.trim() ? hasAt(email) : recruiter && !!phone.trim()) && pass.length > 0;
+  const signInReady = (email.trim() ? hasAt(email) : recruiter && !!phone.trim() && !phoneInvalid) && pass.length > 0;
 
   const doSignIn = useCallback(async () => {
     if (!signInReady || submitting) return;
@@ -215,7 +217,9 @@ export function SignInPage() {
         {(mode === 'register' || (recruiter && mode === 'signin')) && (
           <>
             {mode === 'signin' && <Txt size={12} color={t.mut} align="center">{tr('or')}</Txt>}
-            <AuthField value={phone} onChangeText={setPhone} placeholder={tr('phone number')} inputMode="tel" />
+            <AuthField value={phone} onChangeText={setPhone} placeholder={tr('phone number')} inputMode="tel" invalid={!!phoneError} />
+            <ErrorLine text={phoneError} />
+            <Txt size={12} color={t.mut}>{tr('include the country code. + is added automatically.')}</Txt>
           </>
         )}
         {(mode === 'signin' || mode === 'register') && (
